@@ -2,7 +2,7 @@
 
 A low-cost USB audio interface with S/PDIF optical output, based on the Cmedia CM108AH ASIC.
 
-<center><img src="doc/block-schem.svg" /></center>
+<p align="center"><img src="doc/block-schem.svg" /></p>
 
 **Key Features:**
 
