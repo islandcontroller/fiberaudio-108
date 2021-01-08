@@ -4,11 +4,24 @@ A low-cost USB audio interface with S/PDIF optical output, based on the Cmedia C
 
 <p align="center"><img src="doc/block-schem.svg" /></p>
 
-**Key Features:**
+### Key features
 
 * Cmedia CM108AH audio interface ASIC
 * Stereo, up to 48 kHz
 * USB Micro-B input
-* Optical S/PDIF output (JIS F05, aka. TOSLINK&trade;)
+* Optical S/PDIF output (JIS F05, e.g. TOSLINK&trade;)
 * USB Audio Device Class 1.0, uses generic drivers
 * Configuration EEPROM
+
+## Overview
+
+This USB audio interface provides a low-cost S/PDIF optical output for portable computers and tablet devices. Audio tranmission via optical link - as opposed to a wired line-level connection - eliminates hum caused by ground potential differences, and noise feed-through from switched-mode power supplies.
+
+| Design Requirement | Solution Approach |
+|--------------------|-------------------|
+| Provide electrical isolation between device and audio equipment | Audio signal transmission via optical link (e.g. TOSLINK&trade;) |
+| Compatibility for wide range of operating systems, with minimal driver maintenance | USB Audio Device Class using OS-provided generic drivers |
+| IP accessibility for PCB design files | Use of free, open-source EDA tooling (e.g. KiCad) |
+| Commonly-used, small form-factor USB connector, robust enough to withstand portable use | USB **mini**-B receptacle |
+| Option for manual assembly | Passives no smaller than 0805. ICs leaded and no smaller than 50mil pin pitch (SSOP) |
+| Low PCB production capability requirements | &bullet;&nbsp;FR4 base material<br/>&bullet;&nbsp;2-layer Cu, Top+Bot Mask, Top Overlay<br/>&bullet;&nbsp;&geq;0.25mm trace-to-outline<br/>&bullet;&nbsp;&geq;10mil trace width and spacing<br/>&bullet;&nbsp;&geq;0.5mm drill size<br/>&bullet;&nbsp;Gerber, NC Drill and RS274X outputs |
