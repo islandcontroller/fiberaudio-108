@@ -25,3 +25,11 @@ This USB audio interface provides a low-cost S/PDIF optical output for portable 
 | Commonly-used, small form-factor USB connector, robust enough to withstand portable use | USB **mini**-B receptacle |
 | Option for manual assembly | Passives no smaller than 0805. ICs leaded and no smaller than 50mil pin pitch (SSOP) |
 | Low PCB production capability requirements | &bullet;&nbsp;FR4 base material<br/>&bullet;&nbsp;2-layer Cu, Top+Bot Mask, Top Overlay<br/>&bullet;&nbsp;&geq;0.25mm trace-to-outline<br/>&bullet;&nbsp;&geq;10mil trace width and spacing<br/>&bullet;&nbsp;&geq;0.5mm drill size<br/>&bullet;&nbsp;Gerber, NC Drill and RS274X outputs |
+
+## Licensing
+
+If not stated otherwise within the specific file, the contents of this project are licensed under the CERN Open Hardware Licence Version 2 - Permissive. The full license text is provided in the [`LICENSE`](LICENSE) document.
+
+        SPDX-License-Identifier: CERN-OHL-P-2.0
+
+This licensing model is compliant with the [Open Source Hardware Definition 1.0](https://www.oshwa.org/definition/).
