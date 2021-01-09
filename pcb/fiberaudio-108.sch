@@ -4,10 +4,10 @@ EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
-Title "fiberaudio-180"
+Title "fiberaudio-108"
 Date "2021-01-09"
 Rev "1"
-Comp "https://github.com/islandcontroller/fiberaudio-180"
+Comp "https://github.com/islandcontroller/fiberaudio-108"
 Comment1 ""
 Comment2 ""
 Comment3 ""
