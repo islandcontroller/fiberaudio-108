@@ -593,7 +593,6 @@ Wire Wire Line
 	6000 4450 5900 4450
 Wire Wire Line
 	6000 4350 5900 4350
-NoConn ~ 6000 3750
 Wire Wire Line
 	6000 4650 5900 4650
 Wire Wire Line
@@ -855,8 +854,65 @@ NoConn ~ 7000 4550
 NoConn ~ 7000 4650
 NoConn ~ 7000 4750
 NoConn ~ 7000 4850
+Wire Wire Line
+	6000 3750 5900 3750
+$Comp
+L power:+3.3V #PWR0101
+U 1 1 5FFA6FF6
+P 5900 3750
+F 0 "#PWR0101" H 5900 3600 50  0001 C CNN
+F 1 "+3.3V" V 5915 3878 50  0000 L CNN
+F 2 "" H 5900 3750 50  0001 C CNN
+F 3 "" H 5900 3750 50  0001 C CNN
+	1    5900 3750
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Mechanical:MountingHole_Pad H1
+U 1 1 5FFD8615
+P 3000 6200
+F 0 "H1" H 3100 6249 50  0000 L CNN
+F 1 "MountingHole_Pad" H 3100 6158 50  0000 L CNN
+F 2 "MountingHole:MountingHole_2.5mm_Pad" H 3000 6200 50  0001 C CNN
+F 3 "~" H 3000 6200 50  0001 C CNN
+	1    3000 6200
+	1    0    0    -1  
+$EndComp
+$Comp
+L Mechanical:MountingHole_Pad H2
+U 1 1 5FFD9156
+P 3000 6750
+F 0 "H2" H 3100 6799 50  0000 L CNN
+F 1 "MountingHole_Pad" H 3100 6708 50  0000 L CNN
+F 2 "MountingHole:MountingHole_2.5mm_Pad" H 3000 6750 50  0001 C CNN
+F 3 "~" H 3000 6750 50  0001 C CNN
+	1    3000 6750
+	1    0    0    -1  
+$EndComp
 Wire Bus Line
 	4350 3550 4350 4000
 Wire Bus Line
 	5800 2950 5800 3350
+$Comp
+L power:GND #PWR0102
+U 1 1 5FFDDFBA
+P 3000 6300
+F 0 "#PWR0102" H 3000 6050 50  0001 C CNN
+F 1 "GND" H 3005 6127 50  0000 C CNN
+F 2 "" H 3000 6300 50  0001 C CNN
+F 3 "" H 3000 6300 50  0001 C CNN
+	1    3000 6300
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0103
+U 1 1 5FFDE45E
+P 3000 6850
+F 0 "#PWR0103" H 3000 6600 50  0001 C CNN
+F 1 "GND" H 3005 6677 50  0000 C CNN
+F 2 "" H 3000 6850 50  0001 C CNN
+F 3 "" H 3000 6850 50  0001 C CNN
+	1    3000 6850
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC
