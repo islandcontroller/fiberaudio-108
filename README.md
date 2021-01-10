@@ -4,7 +4,7 @@ A low-cost USB audio interface with S/PDIF optical output, based on the Cmedia C
 
 <p align="center"><img src="doc/block-schem.svg" /></p>
 
-View [Schematic &#x1f5ce;](doc/sch_fiberaudio-108_rev1.pdf)
+View [Schematic &#x1f5ce;](doc/sch_fiberaudio-108_rev2.pdf)
 
 ### Key features
 
@@ -25,8 +25,8 @@ This USB audio interface provides a low-cost S/PDIF optical output for portable 
 | Compatibility for wide range of operating systems, with minimal driver maintenance | USB Audio Device Class using OS-provided generic drivers |
 | IP accessibility for PCB design files | Use of free, open-source EDA tooling (e.g. KiCad) |
 | Commonly-used, small form-factor USB connector, robust enough to withstand portable use | USB **mini**-B receptacle |
-| Option for manual assembly | Passives no smaller than 0805. ICs leaded and no smaller than 50mil pin pitch (SSOP) |
-| Low PCB production capability requirements | &bullet;&nbsp;FR4 base material<br/>&bullet;&nbsp;2-layer Cu, Top+Bot Mask, Top Overlay<br/>&bullet;&nbsp;&geq;0.25mm trace-to-outline<br/>&bullet;&nbsp;&geq;10mil trace width and spacing<br/>&bullet;&nbsp;&geq;0.5mm drill size<br/>&bullet;&nbsp;Gerber, NC Drill and RS274X outputs |
+| Option for manual assembly | Passives no smaller than 0603. ICs leaded and no smaller than 0.5mm pin pitch (SSOP) |
+| Low PCB production capability requirements | &bullet;&nbsp;FR4 base material<br/>&bullet;&nbsp;2-layer Cu, Top+Bot Mask, Top Overlay<br/>&bullet;&nbsp;&geq;0.25mm trace-to-outline<br/>&bullet;&nbsp;&geq;0.25mm trace width and spacing<br/>&bullet;&nbsp;&geq;0.35mm drill size<br/>&bullet;&nbsp;Gerber, NC Drill and RS274X outputs |
 
 ## Licensing
 
