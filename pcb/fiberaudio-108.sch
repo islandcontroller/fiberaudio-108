@@ -6,7 +6,7 @@ encoding utf-8
 Sheet 1 1
 Title "fiberaudio-108"
 Date "2021-01-09"
-Rev "2"
+Rev "3"
 Comp "https://github.com/islandcontroller/fiberaudio-108"
 Comment1 ""
 Comment2 ""
@@ -1335,14 +1335,6 @@ F 5 "Auto, Extended" H 4950 4950 50  0001 C CNN "Assembly"
 	1    4950 4950
 	1    0    0    -1  
 $EndComp
-Wire Bus Line
-	5850 1850 5850 2150
-Wire Bus Line
-	4250 3450 4250 3750
-Wire Bus Line
-	2950 3500 2950 4550
-Wire Bus Line
-	4250 4150 4250 4550
 $Comp
 L Connector:TestPoint TP10
 U 1 1 6002C48A
@@ -1365,4 +1357,12 @@ F 3 "~" H 4650 4650 50  0001 C CNN
 	1    4450 4650
 	0    -1   -1   0   
 $EndComp
+Wire Bus Line
+	5850 1850 5850 2150
+Wire Bus Line
+	4250 3450 4250 3750
+Wire Bus Line
+	2950 3500 2950 4550
+Wire Bus Line
+	4250 4150 4250 4550
 $EndSCHEMATC

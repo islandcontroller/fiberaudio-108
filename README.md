@@ -4,7 +4,7 @@ A low-cost USB audio interface with S/PDIF optical output, based on the Cmedia C
 
 <p align="center"><img src="doc/block-schem.svg" /></p>
 
-View [Schematic &#x1f5ce;](doc/sch_fiberaudio-108_rev2.pdf)
+View [Schematic &#x1f5ce;](doc/sch_fiberaudio-108_rev3.pdf)
 
 ### Key features
 
