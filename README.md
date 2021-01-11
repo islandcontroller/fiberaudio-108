@@ -1,10 +1,12 @@
 # fiberaudio-108
 
+[![Prototyping](https://img.shields.io/badge/status-prototyping-blue?style=plastic)]()
+
 A low-cost USB audio interface with S/PDIF optical output, based on the Cmedia CM108AH ASIC.
 
 <p align="center"><img src="doc/block-schem.svg" /></p>
 
-View [Schematic &#x1f5ce;](doc/sch_fiberaudio-108_rev3.pdf)
+View [**Schematic** &#x1f5ce;](doc/sch_fiberaudio-108_rev3.pdf). Production files will be made available on the [Releases](https://github.com/islandcontroller/fiberaudio-108/releases) page, once verification is complete.
 
 ### Key features
 
