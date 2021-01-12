@@ -6,7 +6,7 @@ A low-cost USB audio interface with S/PDIF optical output, based on the Cmedia C
 
 <p align="center"><img src="doc/block-schem.svg" /></p>
 
-View [**Schematic** &#x1f5ce;](doc/sch_fiberaudio-108_rev3.pdf). Production files will be made available on the [Releases](https://github.com/islandcontroller/fiberaudio-108/releases) page, once verification is complete.
+View [**Schematic** &#x1f5ce;](doc/sch_fiberaudio-108_rev4.pdf). Production files will be made available on the [Releases](https://github.com/islandcontroller/fiberaudio-108/releases) page, once verification is complete.
 
 ### Key features
 

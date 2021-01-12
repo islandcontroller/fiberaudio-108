@@ -5,8 +5,8 @@ $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
 Title "fiberaudio-108"
-Date "2021-01-09"
-Rev "3"
+Date "2021-01-12"
+Rev "4"
 Comp "https://github.com/islandcontroller/fiberaudio-108"
 Comment1 ""
 Comment2 ""
@@ -808,45 +808,6 @@ Wire Wire Line
 Wire Wire Line
 	8050 4750 8050 4900
 Connection ~ 8050 4900
-Wire Wire Line
-	6200 2350 6200 2250
-Wire Wire Line
-	6200 1350 6200 1950
-$Comp
-L power:+5V #PWR026
-U 1 1 6005DBE3
-P 6200 1350
-F 0 "#PWR026" H 6200 1200 50  0001 C CNN
-F 1 "+5V" H 6215 1523 50  0000 C CNN
-F 2 "" H 6200 1350 50  0001 C CNN
-F 3 "" H 6200 1350 50  0001 C CNN
-	1    6200 1350
-	1    0    0    -1  
-$EndComp
-$Comp
-L power:GND #PWR027
-U 1 1 6005E2F0
-P 6200 2350
-F 0 "#PWR027" H 6200 2100 50  0001 C CNN
-F 1 "GND" H 6205 2177 50  0000 C CNN
-F 2 "" H 6200 2350 50  0001 C CNN
-F 3 "" H 6200 2350 50  0001 C CNN
-	1    6200 2350
-	1    0    0    -1  
-$EndComp
-$Comp
-L Device:C C10
-U 1 1 60049F86
-P 6200 2100
-F 0 "C10" H 6315 2146 50  0000 L CNN
-F 1 "100nF" H 6315 2055 50  0000 L CNN
-F 2 "Capacitor_SMD:C_0603_1608Metric" H 6238 1950 50  0001 C CNN
-F 3 "~" H 6200 2100 50  0001 C CNN
-F 4 "C14663" H 6200 2100 50  0001 C CNN "LCSC"
-F 5 "Auto" H 6200 2100 50  0001 C CNN "Assembly"
-	1    6200 2100
-	1    0    0    -1  
-$EndComp
 $Comp
 L Device:C C1
 U 1 1 60076670
@@ -948,65 +909,6 @@ F 3 "" H 6850 4350 50  0001 C CNN
 	1    6850 4350
 	1    0    0    -1  
 $EndComp
-Text Label 5650 1950 0    25   ~ 0
-USBD_P
-Text Label 5650 1750 0    25   ~ 0
-USBD_N
-Text Label 4550 1950 0    25   ~ 0
-USBD_R_P
-Text Label 4550 1750 0    25   ~ 0
-USBD_R_N
-Text GLabel 5850 2150 3    25   BiDi ~ 0
-USB
-Entry Wire Line
-	5850 1850 5750 1750
-Entry Wire Line
-	5850 2050 5750 1950
-Wire Wire Line
-	5650 1950 5750 1950
-Wire Wire Line
-	5650 1750 5750 1750
-Wire Wire Line
-	4550 1950 4650 1950
-Wire Wire Line
-	4550 1750 4650 1750
-$Comp
-L power:+5V #PWR022
-U 1 1 601CAE21
-P 4900 1350
-F 0 "#PWR022" H 4900 1200 50  0001 C CNN
-F 1 "+5V" H 4915 1523 50  0000 C CNN
-F 2 "" H 4900 1350 50  0001 C CNN
-F 3 "" H 4900 1350 50  0001 C CNN
-	1    4900 1350
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	5150 1350 4900 1350
-$Comp
-L power:GND #PWR023
-U 1 1 601C6C71
-P 5150 2350
-F 0 "#PWR023" H 5150 2100 50  0001 C CNN
-F 1 "GND" H 5155 2177 50  0000 C CNN
-F 2 "" H 5150 2350 50  0001 C CNN
-F 3 "" H 5150 2350 50  0001 C CNN
-	1    5150 2350
-	1    0    0    -1  
-$EndComp
-$Comp
-L Power_Protection:SRV05-4 U3
-U 1 1 601ACCFB
-P 5150 1850
-F 0 "U3" H 5150 2531 50  0000 C CNN
-F 1 "SRV05-4" H 5150 2440 50  0000 C CNN
-F 2 "Package_TO_SOT_SMD:SOT-23-6" H 5850 1400 50  0001 C CNN
-F 3 "http://www.onsemi.com/pub/Collateral/SRV05-4-D.PDF" H 5150 1850 50  0001 C CNN
-F 4 "C85364" H 5150 1850 50  0001 C CNN "LCSC"
-F 5 "Auto" H 5150 1850 50  0001 C CNN "Assembly"
-	1    5150 1850
-	-1   0    0    -1  
-$EndComp
 Wire Notes Line
 	3850 2150 3750 2050
 Wire Notes Line
@@ -1019,8 +921,6 @@ Text Notes 3900 2350 0    50   ~ 0
 Enumeration as\nUSB FS Device
 Wire Notes Line
 	3750 2050 3750 1800
-Wire Wire Line
-	3950 1850 2200 1850
 Wire Notes Line
 	3500 1800 3900 1800
 Wire Wire Line
@@ -1098,44 +998,6 @@ F 4 "Manual" V 2000 6500 50  0001 C CNN "Assembly"
 $EndComp
 Wire Notes Line
 	4550 2150 3850 2150
-$Comp
-L Device:R R3
-U 1 1 602BE466
-P 4400 1750
-F 0 "R3" V 4300 1650 50  0000 C CNN
-F 1 "22" V 4300 1800 50  0000 C CNN
-F 2 "Resistor_SMD:R_0603_1608Metric" V 4330 1750 50  0001 C CNN
-F 3 "~" H 4400 1750 50  0001 C CNN
-F 4 "C23345" V 4400 1750 50  0001 C CNN "LCSC"
-F 5 "Auto" V 4400 1750 50  0001 C CNN "Assembly"
-	1    4400 1750
-	0    1    1    0   
-$EndComp
-$Comp
-L Device:R R4
-U 1 1 602BEBEC
-P 4400 1950
-F 0 "R4" V 4500 1850 50  0000 C CNN
-F 1 "22" V 4500 2000 50  0000 C CNN
-F 2 "Resistor_SMD:R_0603_1608Metric" V 4515 1950 50  0001 C CNN
-F 3 "~" H 4400 1950 50  0001 C CNN
-F 4 "C23345" V 4400 1950 50  0001 C CNN "LCSC"
-F 5 "Auto" V 4400 1950 50  0001 C CNN "Assembly"
-	1    4400 1950
-	0    1    1    0   
-$EndComp
-Wire Wire Line
-	3650 1750 3950 1750
-Wire Wire Line
-	3950 1850 4150 1750
-Wire Wire Line
-	4150 1750 4250 1750
-Wire Wire Line
-	3950 1750 4150 1850
-Wire Wire Line
-	4150 1850 4150 1950
-Wire Wire Line
-	4150 1950 4250 1950
 $Comp
 L Mechanical:MountingHole_Pad H1
 U 1 1 603A953B
@@ -1357,8 +1219,138 @@ F 3 "~" H 4650 4650 50  0001 C CNN
 	1    4450 4650
 	0    -1   -1   0   
 $EndComp
+Wire Wire Line
+	4100 1850 2200 1850
+$Comp
+L Device:R R3
+U 1 1 602BE466
+P 4250 1850
+F 0 "R3" V 4350 1750 50  0000 C CNN
+F 1 "22" V 4350 1900 50  0000 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 4180 1850 50  0001 C CNN
+F 3 "~" H 4250 1850 50  0001 C CNN
+F 4 "C23345" V 4250 1850 50  0001 C CNN "LCSC"
+F 5 "Auto" V 4250 1850 50  0001 C CNN "Assembly"
+	1    4250 1850
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R4
+U 1 1 602BEBEC
+P 4250 1750
+F 0 "R4" V 4150 1650 50  0000 C CNN
+F 1 "22" V 4150 1800 50  0000 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 4365 1750 50  0001 C CNN
+F 3 "~" H 4250 1750 50  0001 C CNN
+F 4 "C23345" V 4250 1750 50  0001 C CNN "LCSC"
+F 5 "Auto" V 4250 1750 50  0001 C CNN "Assembly"
+	1    4250 1750
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR023
+U 1 1 601C6C71
+P 6050 2350
+F 0 "#PWR023" H 6050 2100 50  0001 C CNN
+F 1 "GND" H 6055 2177 50  0000 C CNN
+F 2 "" H 6050 2350 50  0001 C CNN
+F 3 "" H 6050 2350 50  0001 C CNN
+	1    6050 2350
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+5V #PWR022
+U 1 1 601CAE21
+P 5050 1350
+F 0 "#PWR022" H 5050 1200 50  0001 C CNN
+F 1 "+5V" H 5065 1523 50  0000 C CNN
+F 2 "" H 5050 1350 50  0001 C CNN
+F 3 "" H 5050 1350 50  0001 C CNN
+	1    5050 1350
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6600 2350 6600 2250
+Wire Wire Line
+	6600 1350 6600 1950
+$Comp
+L power:+5V #PWR026
+U 1 1 6005DBE3
+P 6600 1350
+F 0 "#PWR026" H 6600 1200 50  0001 C CNN
+F 1 "+5V" H 6615 1523 50  0000 C CNN
+F 2 "" H 6600 1350 50  0001 C CNN
+F 3 "" H 6600 1350 50  0001 C CNN
+	1    6600 1350
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR027
+U 1 1 6005E2F0
+P 6600 2350
+F 0 "#PWR027" H 6600 2100 50  0001 C CNN
+F 1 "GND" H 6605 2177 50  0000 C CNN
+F 2 "" H 6600 2350 50  0001 C CNN
+F 3 "" H 6600 2350 50  0001 C CNN
+	1    6600 2350
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C10
+U 1 1 60049F86
+P 6600 2100
+F 0 "C10" H 6715 2146 50  0000 L CNN
+F 1 "100nF" H 6715 2055 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 6638 1950 50  0001 C CNN
+F 3 "~" H 6600 2100 50  0001 C CNN
+F 4 "C14663" H 6600 2100 50  0001 C CNN "LCSC"
+F 5 "Auto" H 6600 2100 50  0001 C CNN "Assembly"
+	1    6600 2100
+	1    0    0    -1  
+$EndComp
+Text GLabel 4700 2150 3    25   BiDi ~ 0
+USB
+Entry Wire Line
+	4700 1850 4600 1750
+Entry Wire Line
+	4700 1950 4600 1850
+Wire Wire Line
+	4400 1850 4600 1850
+Wire Wire Line
+	3650 1750 4100 1750
+Wire Wire Line
+	4600 1750 4400 1750
+Text Label 4450 1750 0    25   ~ 0
+USBD_P
+Text Label 4450 1850 0    25   ~ 0
+USBD_N
+Wire Wire Line
+	5650 2350 5650 2450
+Text Label 5650 2450 1    25   ~ 0
+USBD_N
+Wire Wire Line
+	5450 1350 5450 1250
+Text Label 5450 1350 1    25   ~ 0
+USBD_P
+Wire Wire Line
+	5050 1350 5050 1850
+Wire Wire Line
+	6050 1850 6050 2350
+$Comp
+L Power_Protection:SRV05-4 U3
+U 1 1 6011013F
+P 5550 1850
+F 0 "U3" V 5596 1306 50  0000 R CNN
+F 1 "SRV05-4" V 5505 1306 50  0000 R CNN
+F 2 "Package_TO_SOT_SMD:SOT-23-6" H 6250 1400 50  0001 C CNN
+F 3 "http://www.onsemi.com/pub/Collateral/SRV05-4-D.PDF" H 5550 1850 50  0001 C CNN
+	1    5550 1850
+	0    -1   -1   0   
+$EndComp
+NoConn ~ 5650 1350
+NoConn ~ 5450 2350
 Wire Bus Line
-	5850 1850 5850 2150
+	4700 1850 4700 2150
 Wire Bus Line
 	4250 3450 4250 3750
 Wire Bus Line
