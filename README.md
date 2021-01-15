@@ -11,8 +11,8 @@ View [**Schematic** &#x1f5ce;](doc/sch_fiberaudio-108_rev4.pdf). Production file
 ### Key features
 
 * Cmedia CM108AH audio interface ASIC
-* Stereo, up to 48 kHz
-* USB Micro-B input
+* 2.0 Stereo, up to 16-bit/48kHz (CD-DA equivalent)
+* USB Mini-B input
 * Optical S/PDIF output (JIS F05, e.g. TOSLINK&trade;)
 * USB Audio Device Class 1.0, uses generic drivers
 * Configuration EEPROM
