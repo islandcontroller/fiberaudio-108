@@ -1,12 +1,12 @@
 # fiberaudio-108
 
-[![Prototyping](https://img.shields.io/badge/status-prototyping-blue?style=plastic)]()
+[![Prototyping](https://img.shields.io/badge/status-review-yellow?style=plastic)]()
 
 A low-cost USB audio interface with S/PDIF optical output, based on the Cmedia CM108AH ASIC.
 
 <p align="center"><img src="doc/block-schem.svg" /></p>
 
-View [**Schematic** &#x1f5ce;](doc/sch_fiberaudio-108_rev4.pdf). Production files will be made available on the [Releases](https://github.com/islandcontroller/fiberaudio-108/releases) page, once verification is complete.
+View [**Schematic** &#x1f5ce;](doc/sch_fiberaudio-108_rev4.pdf). Production files will be made available on the [Releases](https://github.com/islandcontroller/fiberaudio-108/releases) page, once validation is complete.
 
 ### Key features
 
@@ -29,6 +29,34 @@ This USB audio interface provides a low-cost S/PDIF optical output for portable 
 | Commonly-used, small form-factor USB connector, robust enough to withstand portable use | USB **mini**-B receptacle |
 | Option for manual assembly | Passives no smaller than 0603. ICs leaded and no smaller than 0.5mm pin pitch (SSOP) |
 | Low PCB production capability requirements | &bullet;&nbsp;FR4 base material<br/>&bullet;&nbsp;2-layer Cu, Top+Bot Mask, Top Overlay<br/>&bullet;&nbsp;&geq;0.25mm trace-to-outline<br/>&bullet;&nbsp;&geq;0.25mm trace width and spacing<br/>&bullet;&nbsp;&geq;0.35mm drill size<br/>&bullet;&nbsp;Gerber, NC Drill and RS274X outputs |
+
+## Design Review (Prototyping)
+
+Prototyping was carried out using **rev. 3** board design files, in a minimum-order batch of 5 PCBs, including automated assembly.
+
+### Assembly
+
+* Manual rework of the PCB around `U3` (SRV05-4) was required in order to fix the issues found in *rev. 3*, after production was already started.
+* Parts `U1` (AT93C46D), `U2` (CM108AH), `SW1`, and both connectors were unavailable for automated assembly, and had to be retrofitted manually using hot-air reflow soldering.
+
+### Software Support
+
+* Generic Audio Device drivers included in Windows 7.1 (x64) as well as Windows 10 (Version 2004, x64) only support S/PDIF output in a passthrough mode. **Volume control and the mute input are inoperative when using the default driver package** (see below for workaround).
+
+**Workaround:** A vendor-specific Windows driver package for the CM108AH is available for download from the ASIC manufacturer's website: [https://www.cmedia.com.tw/support/download_center](https://www.cmedia.com.tw/support/download_center).
+
+Using the Windows device manager, perform a manual driver update of the `Generic USB PnP Sound Device`, and select `Win8\SoftwareDriver` from the extracted archive as the driver installation sources directory.
+
+After installation and a reboot, a new `Digital Audio (USB PnP Sound Device)` device will show up in the Sound Settings dialog, alongside the old `Speakers (USB PnP Sound Device)` device. 
+
+**Disable** the `Speaker` device.
+
+This workaround was tested using Windows 7.1 (x64), and Windows 10 (Version 2004, x64).
+
+### Summary
+
+* EEPROM access and configuration test results pending
+* The driver issue conflicts with one of the core design requirements, severely limiting the usability when connected to a non-Windows host.
 
 ## Licensing
 
