@@ -1,0 +1,53 @@
+# Copyright 2021, islandcontroller_ and the fiberaudio-108 contributors
+# SPDX-License-Identifier: CERN-OHL-P-2.0
+
+# ------------------------------------------------------------------------------
+# fiberaudio-108
+# https://github.com/islandcontroller/fiberaudio-108
+#
+#   CM108AH configuration template
+#
+# Copyright © 2021 islandcontroller_ and contributors
+# Licensed under CERN Open Hardware Licence Version 2 - Permissive
+#-------------------------------------------------------------------------------
+
+# USB vendor and product ID configuration.
+# Changing the VID/PID will cause things to break, hence readout of these values
+# requires the "enable_usb_ids" parameter to be set on read_yaml().
+#usb:
+#  vid: 0x1234
+#  pid: 0x1234
+
+# Serial "number" (string). Setting this field will automatically set the "use_-
+# serial_num" magic flag.
+serial: "00000000"
+
+# Manufacturer name. Setting this field will automatically set the "use_manuf_-
+# name" magic flag.
+manufacturer: "islandc_"
+
+# Product name. Setting this field will automatically set the "use_product_name"
+# magic flag
+product: "fiberaudio-108"
+
+# Volume presets for ADC and DAC stages, in EEPROM notation (see CM108AH data-
+# sheet for valid range).
+#presets:
+#  adc: 0x00
+#  dac: 0x00
+
+# Configuration bits. 
+# Setting this field will automatically set the "cfg_bits_-valid" magic flag. 
+# Commented-out values will retain default configuration. See the CM108AH data-
+# sheet for details on specific configuration bits.
+# Changing the "HID_EN" bit can brick the device, hence readout will require the
+# "enable_hid_en" parameter to be set in read_yaml().
+config:
+  SHDN_DAC: true
+#  TOTAL_PWR_CTL: false
+#  MIC_HP: true
+#  ADC_SYNC: false
+#  MIC_BOOST: true
+#  DAC_OUT_HP: false
+#  HID_EN: true
+#  REMOTE_WKUP_EN: false

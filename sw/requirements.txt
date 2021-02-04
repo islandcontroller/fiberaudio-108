@@ -1,0 +1,3 @@
+hexdump>=3.3
+pywinusb>=0.4.2
+pyyaml>=5.4.1
