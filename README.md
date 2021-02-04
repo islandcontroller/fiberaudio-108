@@ -53,9 +53,14 @@ After installation and a reboot, a new `Digital Audio (USB PnP Sound Device)` de
 
 This workaround was tested using Windows 7.1 (x64), and Windows 10 (Version 2004, x64).
 
+### Device Configuration
+
+* A configuration tool for re-programming the external EEPROM was developed and is provided in the [`sw/`](sw/) subdirectory.
+
+* EEPROM access sporadically seems to return invalid data. Re-reading or re-programming the affected words can be used as a workaround.
+
 ### Summary
 
-* EEPROM access and configuration test results pending
 * The driver issue conflicts with one of the core design requirements, severely limiting the usability when connected to a non-Windows host.
 
 ## Licensing
