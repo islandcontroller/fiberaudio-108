@@ -14,8 +14,9 @@
 import argparse
 from enum import IntEnum
 import hexdump
-import time
 import pywinusb.hid as hid
+import time
+from typing import *
 import warnings
 import yaml
 
@@ -37,11 +38,11 @@ class Device:
             """
             self._report_num = report_num
 
-        def get_data(self) -> list[int]:
+        def get_data(self) -> List[int]:
             """Get raw generic HID report data
 
             Returns:
-                list[int]: Raw HID report data
+                List[int]: Raw HID report data
             """
             return [self._report_num]
 
@@ -101,11 +102,11 @@ class Device:
                 raise ValueError('Invalid register selection')
             return self._regs[reg]
 
-        def get_data(self) -> list[int]:
+        def get_data(self) -> List[int]:
             """Get raw HID Out report data
 
             Returns:
-                list[int]: Raw HID Out report data
+                List[int]: Raw HID Out report data
             """
             return [self._report_num] + self._regs
 
@@ -151,11 +152,11 @@ class Device:
             self.set_reg(self.HidReg.HID_OR2, (value >> 8) & 0xFF)
             self.set_reg(self.HidReg.HID_OR1, value & 0xFF)
 
-        def set_eeprom_data8(self, value: list[int]):
+        def set_eeprom_data8(self, value: List[int]):
             """Set data from list of bytes
 
             Args:
-                value (list[int]): List of bytes (exactly 2)
+                value (List[int]): List of bytes (exactly 2)
 
             Raises:
                 ValueError: List length does not match requirement
@@ -173,11 +174,11 @@ class Device:
             """
             return (self.get_reg(self.HidReg.HID_OR2) << 8) + self.get_reg(self.HidReg.HID_OR1)
 
-        def get_eeprom_data8(self) -> list[int]:
+        def get_eeprom_data8(self) -> List[int]:
             """Get data as list of bytes
 
             Returns:
-                list[int]: Data as list of bytes
+                List[int]: Data as list of bytes
             """
             return [self.get_reg(self.HidReg.HID_OR1), self.get_reg(self.HidReg.HID_OR2)]
             
@@ -210,12 +211,12 @@ class Device:
     class EepromWrite8OutReport(EepromOutReport):
         """HID Out report for 2 data bytes write access
         """
-        def __init__(self, addr: int, value: list[int]):
+        def __init__(self, addr: int, value: List[int]):
             """Instantiate new HID Out report
 
             Args:
                 addr (int): Word address
-                value (list[int]): Data bytes (exactly 2)
+                value (List[int]): Data bytes (exactly 2)
             """
             super().__init__()
             self.set_eeprom_ctrl(addr, True)
@@ -232,11 +233,11 @@ class Device:
             HID_IR2 = 2
             HID_IR3 = 3
 
-        def __init__(self, data: list[int]):
+        def __init__(self, data: List[int]):
             """Create new generic CM108 HID In report from raw data
 
             Args:
-                data (list[int]): Raw HID In report data
+                data (List[int]): Raw HID In report data
 
             Raises:
                 ValueError: Data does not match length requirements
@@ -266,22 +267,22 @@ class Device:
                 raise ValueError('Invalid register selection')
             return self._regs[reg]
 
-        def get_data(self) -> list[int]:
+        def get_data(self) -> List[int]:
             """Get raw HID In report data
 
             Returns:
-                list[int]: Raw HID In report data
+                List[int]: Raw HID In report data
             """
             return [self._report_num] + self._regs
 
     class EepromInReport(InReport):
         """HID In Report containing EEPROM data
         """
-        def __init__(self, data: list[int]):
+        def __init__(self, data: List[int]):
             """Instantiate EEPROM In Report from raw data
 
             Args:
-                data (list[int]): Raw HID In report data
+                data (List[int]): Raw HID In report data
             """
             super().__init__(data)
 
@@ -293,20 +294,20 @@ class Device:
             """
             return (self.get_reg(self.HidReg.HID_IR2) << 8) + self.get_reg(self.HidReg.HID_IR1)
 
-        def get_eeprom_data8(self) -> list[int]:
+        def get_eeprom_data8(self) -> List[int]:
             """Get EEPROM data as bytes list
 
             Returns:
-                list[int]: EEPROM data fields as byte list
+                List[int]: EEPROM data fields as byte list
             """
             return [self.get_reg(self.HidReg.HID_IR1), self.get_reg(self.HidReg.HID_IR2)]
 
     @classmethod
-    def GetAvailableDefaultDevices(cls) -> list[hid.HidDevice]:
+    def GetAvailableDefaultDevices(cls) -> List[hid.HidDevice]:
         """List all available devices matching default Cmedia CM108AH VID/PID
 
         Returns:
-            list[hid.HidDevice]: List of available HIDDevices matching default Cmedia VID/PID
+            List[hid.HidDevice]: List of available HIDDevices matching default Cmedia VID/PID
         """
         return hid.HidDeviceFilter(vendor_id=cls._VENDOR_ID, product_id=cls._PRODUCT_ID).get_devices()
 
@@ -325,7 +326,7 @@ class Device:
         self._in_report = self._hid_device.find_input_reports()[0]
         self._out_report = self._hid_device.find_output_reports()[0]
         
-    def read16(self, addr: int, num_words: int = 1) -> list[int]:
+    def read16(self, addr: int, num_words: int = 1) -> List[int]:
         """Read from EEPROM into list of words
 
         Args:
@@ -336,7 +337,7 @@ class Device:
             IOError: Failed to send USB HID out report
 
         Returns:
-            list[int]: EEPROM data as list of words
+            List[int]: EEPROM data as list of words
         """
         data = []
         for offset in range(0, num_words):
@@ -356,7 +357,7 @@ class Device:
             
         return data
 
-    def read8(self, addr: int, num_words: int = 1) -> list[int]:
+    def read8(self, addr: int, num_words: int = 1) -> List[int]:
         """Read from EERPOM into list of bytes
 
         Args:
@@ -367,7 +368,7 @@ class Device:
             IOError: Failed to send USB HID Out report
 
         Returns:
-            list[int]: EEPROM data as list of bytes
+            List[int]: EEPROM data as list of bytes
         """
         data = []
         for offset in range(0, num_words):
@@ -387,12 +388,12 @@ class Device:
 
         return data
 
-    def write16(self, addr: int, data: list[int], max_retry: int = 0):
+    def write16(self, addr: int, data: List[int], max_retry: int = 0):
         """Write array of words to EEPROM
 
         Args:
             addr (int): Start word address
-            data (list[int]): List of words
+            data (List[int]): List of words
             max_retry (int, optional): Number of write retries per address. Defaults to 0.
 
         Raises:
@@ -432,12 +433,12 @@ class Device:
                 if fail_count > max_retry:
                     raise IOError(f"Repeated writes to address 0x{addr + offset:02X} failed. Sent {write_out_report.get_data()}, got {write_in_report.get_data()}")
 
-    def write8(self, addr: int, data: list[int], max_retry: int = 0):
+    def write8(self, addr: int, data: List[int], max_retry: int = 0):
         """Write array of bytes to EEPROM
 
         Args:
             addr (int): Start word address
-            data (list[int]): List of bytes (multiple of 2!)
+            data (List[int]): List of bytes (multiple of 2!)
             max_retry (int, optional): Number of write retries for each address. Defaults to 0.
 
         Raises:
@@ -847,13 +848,13 @@ class ConfigurationSerializer:
         """
         self._config = config
 
-    def serialize(self) -> list[int]:
+    def serialize(self) -> List[int]:
         """Serialize assigned configuration into binary word array
 
         Returns:
-            list[int]: Array of words for download into the device (=EEPROM image)
+            List[int]: Array of words for download into the device (=EEPROM image)
         """
-        def pack_str(data: str) -> list[int]:
+        def pack_str(data: str) -> List[int]:
             """Helper function for USB string descriptor packing
 
             Args:
@@ -863,7 +864,7 @@ class ConfigurationSerializer:
                 ValueError: Maximum of 127 characters can be packed, as field length has byte type
 
             Returns:
-                list[int]: Encoded and packed word array
+                List[int]: Encoded and packed word array
             """
             length = len(data)
             if length > 0x7F:
