@@ -2,11 +2,9 @@
 
 A Python tool for accessing the CM108AH external configuration EEPROM via the ASIC's custom HID endpoint.
 
-**Note:** EEPROM access is only available in the CM108**AH** ASIC variant.
-
 ## System requirements
 
-* Python 3.3+ (tested using Python 3.9)
+* Python 3.8+
 * Windows OS (limitation due to PyWinUSB.HID library)
 
 ## Installation

@@ -1,7 +1,6 @@
 # CM108AH EEPROM Access
 
-The Cmedia `CM108`**`AH`** ASIC offers access to the attached EEPROM via an HID endpoint. Other variants of the `CM108*` ASIC (i.e. `CM108`, `CM108B`) do not provide this functionality.
-
+The Cmedia `CM108` ASIC offers access to the attached EEPROM via an HID endpoint.
 ## Report data structure
 
 Descriptions for each data byte of the in/out reports are provided in the [datasheet](cm108ah.pdf). For reference, the HID report number `0` needs to be prepended, for a total of 5 bytes per transfer.
