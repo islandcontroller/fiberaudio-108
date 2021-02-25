@@ -5,8 +5,8 @@ $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
 Title "fiberaudio-108"
-Date "2021-01-12"
-Rev "4"
+Date "2021-02-25"
+Rev "4.1"
 Comp "https://github.com/islandcontroller/fiberaudio-108"
 Comment1 ""
 Comment2 ""
@@ -473,20 +473,17 @@ Wire Notes Line
 	3650 5400 3650 5000
 Wire Notes Line
 	3950 5450 3850 5350
-Text Label 4350 5050 0    25   ~ 0
-MUTE
-Wire Wire Line
-	4450 5050 4350 5050
 $Comp
 L custom:AT93C46D U1
 U 1 1 5FFAA596
 P 2650 3200
-F 0 "U1" H 2875 3265 50  0000 C CNN
-F 1 "AT93C46D" H 2875 3174 50  0000 C CNN
+F 0 "U1" H 2875 3356 50  0000 C CNN
+F 1 "AT93C46D" H 2875 3265 50  0000 C CNN
 F 2 "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm" H 2700 3150 50  0001 C CNN
 F 3 "" H 2700 3150 50  0001 C CNN
 F 4 "C6499" H 2650 3200 50  0001 C CNN "LCSC"
 F 5 "Auto, Extended" H 2650 3200 50  0001 C CNN "Assembly"
+F 6 "(AT93C46E)" H 2875 3174 50  0000 C CNN "Alternative"
 	1    2650 3200
 	-1   0    0    -1  
 $EndComp
@@ -662,7 +659,7 @@ L custom:PLT133_T10W J2
 U 1 1 60005290
 P 8550 4750
 F 0 "J2" H 9078 4388 50  0000 L CNN
-F 1 "PLT133_T10W" H 9078 4297 50  0000 L CNN
+F 1 "PLT133/T10W" H 9078 4297 50  0000 L CNN
 F 2 "custom:PLT133_T10W" H 8600 4750 50  0001 C CNN
 F 3 "" H 8600 4750 50  0001 C CNN
 F 4 "Manual" H 8550 4750 50  0001 C CNN "Assembly"
@@ -952,50 +949,6 @@ F 3 "" H 3650 1350 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	3650 1650 3650 1750
-$Comp
-L Device:R R2
-U 1 1 604728F9
-P 3650 1500
-F 0 "R2" H 3720 1546 50  0000 L CNN
-F 1 "1k5" H 3720 1455 50  0000 L CNN
-F 2 "Resistor_SMD:R_0603_1608Metric" V 3580 1500 50  0001 C CNN
-F 3 "~" H 3650 1500 50  0001 C CNN
-F 4 "C22843" H 3650 1500 50  0001 C CNN "LCSC"
-F 5 "Auto" H 3650 1500 50  0001 C CNN "Assembly"
-	1    3650 1500
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	2000 6700 2000 6900
-Wire Wire Line
-	2000 6000 2000 6300
-Wire Wire Line
-	1800 6000 2000 6000
-$Comp
-L power:GND #PWR07
-U 1 1 6020FF87
-P 2000 6900
-F 0 "#PWR07" H 2000 6650 50  0001 C CNN
-F 1 "GND" H 2005 6727 50  0000 C CNN
-F 2 "" H 2000 6900 50  0001 C CNN
-F 3 "" H 2000 6900 50  0001 C CNN
-	1    2000 6900
-	1    0    0    -1  
-$EndComp
-Text Label 1800 6000 0    25   ~ 0
-MUTE
-$Comp
-L Switch:SW_Push SW1
-U 1 1 601FE0B9
-P 2000 6500
-F 0 "SW1" V 2046 6452 50  0000 R CNN
-F 1 "MUTE" V 1955 6452 50  0000 R CNN
-F 2 "Button_Switch_SMD:SW_SPST_PTS645" H 2000 6700 50  0001 C CNN
-F 3 "~" H 2000 6700 50  0001 C CNN
-F 4 "Manual" V 2000 6500 50  0001 C CNN "Assembly"
-	1    2000 6500
-	0    -1   -1   0   
-$EndComp
 Wire Notes Line
 	4550 2150 3850 2150
 $Comp
@@ -1325,17 +1278,66 @@ USBD_P
 Text Label 4450 1850 0    25   ~ 0
 USBD_N
 Wire Wire Line
-	5650 2350 5650 2450
-Text Label 5650 2450 1    25   ~ 0
-USBD_N
-Wire Wire Line
-	5450 1350 5450 1250
-Text Label 5450 1350 1    25   ~ 0
-USBD_P
-Wire Wire Line
 	5050 1350 5050 1850
 Wire Wire Line
 	6050 1850 6050 2350
+Wire Notes Line
+	1650 3200 1950 3200
+Wire Notes Line
+	1950 3200 1950 3500
+Wire Notes Line
+	1950 3500 1650 3500
+Wire Notes Line
+	1650 3500 1650 3200
+Wire Notes Line
+	1650 3500 1550 3600
+Wire Notes Line
+	1550 3600 1350 3600
+Text Notes 950  3700 0    50   ~ 0
+DNP for\nAT93C46E
+Wire Notes Line
+	900  3500 1350 3500
+Wire Notes Line
+	1350 3500 1350 3750
+Wire Notes Line
+	1350 3750 900  3750
+Wire Notes Line
+	900  3750 900  3500
+Wire Wire Line
+	4450 5050 4350 5050
+Text Label 4350 5050 0    25   ~ 0
+MUTE
+$Comp
+L Switch:SW_Push SW1
+U 1 1 601FE0B9
+P 2000 6500
+F 0 "SW1" V 2046 6452 50  0000 R CNN
+F 1 "MUTE" V 1955 6452 50  0000 R CNN
+F 2 "Button_Switch_SMD:SW_SPST_PTS645" H 2000 6700 50  0001 C CNN
+F 3 "~" H 2000 6700 50  0001 C CNN
+F 4 "Manual" V 2000 6500 50  0001 C CNN "Assembly"
+	1    2000 6500
+	0    -1   -1   0   
+$EndComp
+Text Label 1800 6000 0    25   ~ 0
+MUTE
+$Comp
+L power:GND #PWR07
+U 1 1 6020FF87
+P 2000 6900
+F 0 "#PWR07" H 2000 6650 50  0001 C CNN
+F 1 "GND" H 2005 6727 50  0000 C CNN
+F 2 "" H 2000 6900 50  0001 C CNN
+F 3 "" H 2000 6900 50  0001 C CNN
+	1    2000 6900
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1800 6000 2000 6000
+Wire Wire Line
+	2000 6000 2000 6300
+Wire Wire Line
+	2000 6700 2000 6900
 $Comp
 L Power_Protection:SRV05-4 U3
 U 1 1 6011013F
@@ -1344,11 +1346,36 @@ F 0 "U3" V 5596 1306 50  0000 R CNN
 F 1 "SRV05-4" V 5505 1306 50  0000 R CNN
 F 2 "Package_TO_SOT_SMD:SOT-23-6" H 6250 1400 50  0001 C CNN
 F 3 "http://www.onsemi.com/pub/Collateral/SRV05-4-D.PDF" H 5550 1850 50  0001 C CNN
+F 4 "(NUP2201)" V 5414 1306 50  0001 R CNN "Alternative"
 	1    5550 1850
 	0    -1   -1   0   
 $EndComp
+Text Label 5650 2450 1    25   ~ 0
+USBD_N
+Wire Wire Line
+	5650 2350 5650 2450
+Text Label 5450 1350 1    25   ~ 0
+USBD_P
+Wire Wire Line
+	5450 1350 5450 1250
 NoConn ~ 5650 1350
 NoConn ~ 5450 2350
+$Comp
+L Device:R R2
+U 1 1 604728F9
+P 3650 1500
+F 0 "R2" H 3720 1566 50  0000 L CNN
+F 1 "1k5" H 3720 1435 50  0000 L CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 3580 1500 50  0001 C CNN
+F 3 "~" H 3650 1500 50  0001 C CNN
+F 4 "C22843" H 3650 1500 50  0001 C CNN "LCSC"
+F 5 "Auto" H 3650 1500 50  0001 C CNN "Assembly"
+F 6 "5%" H 3720 1500 50  0000 L CNN "Tolerance"
+	1    3650 1500
+	1    0    0    -1  
+$EndComp
+Text Notes 7000 6750 0    50   ~ 0
+Compatible alternative P/N in round brackets.\nRES tolerance 10% unless otherwise noted.
 Wire Bus Line
 	4700 1850 4700 2150
 Wire Bus Line
