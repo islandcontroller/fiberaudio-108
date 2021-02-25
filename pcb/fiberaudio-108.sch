@@ -6,7 +6,7 @@ encoding utf-8
 Sheet 1 1
 Title "fiberaudio-108"
 Date "2021-02-25"
-Rev "4.1"
+Rev "5"
 Comp "https://github.com/islandcontroller/fiberaudio-108"
 Comment1 ""
 Comment2 ""
@@ -1346,20 +1346,18 @@ F 0 "U3" V 5596 1306 50  0000 R CNN
 F 1 "SRV05-4" V 5505 1306 50  0000 R CNN
 F 2 "Package_TO_SOT_SMD:SOT-23-6" H 6250 1400 50  0001 C CNN
 F 3 "http://www.onsemi.com/pub/Collateral/SRV05-4-D.PDF" H 5550 1850 50  0001 C CNN
-F 4 "(NUP2201)" V 5414 1306 50  0001 R CNN "Alternative"
+F 4 "(NUP2201)" V 5414 1306 50  0000 R CNN "Alternative"
 	1    5550 1850
 	0    -1   -1   0   
 $EndComp
-Text Label 5650 2450 1    25   ~ 0
+Text Label 5450 2450 1    25   ~ 0
 USBD_N
 Wire Wire Line
-	5650 2350 5650 2450
-Text Label 5450 1350 1    25   ~ 0
+	5450 2350 5450 2450
+Text Label 5650 1350 1    25   ~ 0
 USBD_P
 Wire Wire Line
-	5450 1350 5450 1250
-NoConn ~ 5650 1350
-NoConn ~ 5450 2350
+	5650 1350 5650 1250
 $Comp
 L Device:R R2
 U 1 1 604728F9
@@ -1376,6 +1374,8 @@ F 6 "5%" H 3720 1500 50  0000 L CNN "Tolerance"
 $EndComp
 Text Notes 7000 6750 0    50   ~ 0
 Compatible alternative P/N in round brackets.\nRES tolerance 10% unless otherwise noted.
+NoConn ~ 5450 1350
+NoConn ~ 5650 2350
 Wire Bus Line
 	4700 1850 4700 2150
 Wire Bus Line
