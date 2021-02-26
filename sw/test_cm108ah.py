@@ -327,6 +327,146 @@ class TestEepromWrite8OutReport(unittest.TestCase):
 
         self.assertListEqual(r.get_data(), expect_data)
 
+class TestGpioOutReport(unittest.TestCase):
+    def test_AccessMode(self):
+        expect_mode = 0x00
+        expect_report_num = 0
+        expect_data = [expect_report_num, expect_mode, 0, 0 ,0]
+
+        r = Device.GpioOutReport()
+        self.assertListEqual(r.get_data(), expect_data)
+
+    def test_SetSpdifStatusRange(self):
+        expect_data_pass = 0x0F
+        expect_data_fail = 0x10
+        expect_cat_pass = 0xFF
+        expect_cat_fail = 0x100
+
+        r = Device.GpioOutReport()
+
+        try:
+            r.set_spdif_status(False, expect_data_pass, expect_cat_pass)
+        except:
+            self.fail()
+
+        self.assertRaises(ValueError, r.set_spdif_status, False, expect_data_pass, expect_cat_fail)
+        self.assertRaises(ValueError, r.set_spdif_status, False, expect_data_fail, expect_cat_pass)
+        self.assertRaises(ValueError, r.set_spdif_status, False, expect_data_fail, expect_cat_fail)
+
+    def test_SetSpdifStatusPosition(self):
+        expect_mode_0 = 0x00
+        expect_mode_1 = 0x09
+        expect_mode_2 = 0x19
+
+        r0 = Device.GpioOutReport()
+        r1 = Device.GpioOutReport()
+        r2 = Device.GpioOutReport()
+
+        r0.set_spdif_status(False, 0x00, 0)
+        r1.set_spdif_status(False, 0x09, 0)
+        r2.set_spdif_status(True, 0x09, 0)
+
+        self.assertEqual(r0.get_reg(Device.OutReport.HidReg.HID_OR0), expect_mode_0)
+        self.assertEqual(r1.get_reg(Device.OutReport.HidReg.HID_OR0), expect_mode_1)
+        self.assertEqual(r2.get_reg(Device.OutReport.HidReg.HID_OR0), expect_mode_2)
+
+    def test_GetSpdifStatusValid(self):
+        expect_valid_0 = False
+        expect_valid_1 = True
+
+        r0 = Device.GpioOutReport()
+        r1 = Device.GpioOutReport()
+
+        r0.set_spdif_status(expect_valid_0, 0, 0)
+        r1.set_spdif_status(expect_valid_1, 0, 0)
+
+        self.assertEqual(r0.get_spdif_status_valid(), expect_valid_0)
+        self.assertEqual(r1.get_spdif_status_valid(), expect_valid_1)
+
+    def test_GetSpdifStatusData(self):
+        expect_data_0 = 0x00
+        expect_data_1 = 0x09
+
+        r0 = Device.GpioOutReport()
+        r1 = Device.GpioOutReport()
+
+        r0.set_spdif_status(False, expect_data_0, 0)
+        r1.set_spdif_status(False, expect_data_1, 0)
+
+        self.assertEqual(r0.get_spdif_status_data(), expect_data_0)
+        self.assertEqual(r1.get_spdif_status_data(), expect_data_1)
+
+    def test_GetSpdifStatusCat(self):
+        expect_cat_0 = 0x00
+        expect_cat_1 = 0xFF
+
+        r0 = Device.GpioOutReport()
+        r1 = Device.GpioOutReport()
+
+        r0.set_spdif_status(False, 0, expect_cat_0)
+        r1.set_spdif_status(False, 0, expect_cat_1)
+
+        self.assertEqual(r0.get_spdif_status_cat(), expect_cat_0)
+        self.assertEqual(r1.get_spdif_status_cat(), expect_cat_1)
+
+    def test_SetGpioDataRegRange(self):
+        expect_value_pass = 0x0F
+        expect_value_fail = 0x10
+
+        r = Device.GpioOutReport()
+
+        try:
+            r.set_gpio_data_reg(expect_value_pass)
+        except ValueError:
+            self.fail()
+
+        self.assertRaises(ValueError, r.set_gpio_data_reg, expect_value_fail)
+
+    def test_SetGpioDataRegPosition(self):
+        expect_value = 0x09
+
+        r = Device.GpioOutReport()
+        r.set_gpio_data_reg(expect_value)
+
+        self.assertEqual(r.get_reg(Device.OutReport.HidReg.HID_OR1), expect_value)
+
+    def test_GetGpioDataReg(self):
+        expect_value = 0x0F
+
+        r = Device.GpioOutReport()
+        r.set_gpio_data_reg(expect_value)
+
+        self.assertEqual(r.get_gpio_data_reg(), expect_value)
+
+    def test_SetGpioDirRegRange(self):
+        expect_value_pass = 0x0F
+        expect_value_fail = 0x10
+
+        r = Device.GpioOutReport()
+
+        try:
+            r.set_gpio_dir_reg(expect_value_pass)
+        except ValueError:
+            self.fail()
+
+        self.assertRaises(ValueError, r.set_gpio_dir_reg, expect_value_fail)
+
+    def test_SetGpioDirRegPosition(self):
+        expect_dir = 0x09
+
+        r = Device.GpioOutReport()
+        r.set_gpio_dir_reg(expect_dir)
+
+        self.assertEqual(r.get_reg(Device.OutReport.HidReg.HID_OR2), expect_dir)
+
+    def test_GetGpioDirReg(self):
+        expect_dir = 0x0F
+
+        r = Device.GpioOutReport()
+        r.set_gpio_dir_reg(expect_dir)
+
+        self.assertEqual(r.get_gpio_dir_reg(), expect_dir)
+
 class TestInReport(unittest.TestCase):
     def test_GetData(self):
         expect_report_num = 1
@@ -385,6 +525,23 @@ class TestEepromInReport(unittest.TestCase):
         r = Device.EepromInReport(raw_report)
 
         self.assertListEqual(r.get_eeprom_data8(), expected_data)
+
+class TestGpioInReport(unittest.TestCase):
+    def test_GetButtons(self):
+        expected_buttons = 0x09
+        raw_data = [0, expected_buttons, 0, 0, 0]
+
+        r = Device.GpioInReport(raw_data)
+
+        self.assertEqual(r.get_gpio_buttons(), expected_buttons)
+
+    def test_GetGpioDataReg(self):
+        expected_data = 0x5A
+        raw_data = [0, 0, expected_data, 0, 0]
+
+        r = Device.GpioInReport(raw_data)
+
+        self.assertEqual(r.get_gpio_data_reg(), expected_data)
 
 class TestConfiguration(unittest.TestCase):
     def test_InitialValidStates(self):

@@ -222,6 +222,100 @@ class Device:
             self.set_eeprom_ctrl(addr, True)
             self.set_eeprom_data8(value)
 
+    class GpioOutReport(OutReport):
+        """HID Out report for GPIO and SPDIF access
+        """
+        def __init__(self):
+            """Instantiate new GPIO access HID Out report
+            """
+            super().__init__(0)
+            self.set_reg(self.HidReg.HID_OR0, self._ACCESS_GPIO)
+
+        def set_spdif_status(self, valid: bool, data: int, category: int):
+            """Set SPDIF status channel values
+
+            Args:
+                valid (bool): SPDIF status channel valid flag
+                data (int): SPDIF status channel data nibble
+                categoriy (int): SPDIF status channel category byte
+
+            Raises:
+                ValueError: Value for SPDIF status nibble out of range
+                ValueError: Value for SPDIF category byte out of range
+            """
+            if data > 0x0F:
+                raise ValueError('SPDIF status channel nibble out of range')
+            if category > 0xFF:
+                raise ValueError('SPDIF category byte out of range')
+            self.set_reg(self.HidReg.HID_OR0, self._ACCESS_GPIO | data | (valid << 4))
+            self.set_reg(self.HidReg.HID_OR3, category)
+
+        def get_spdif_status_valid(self) -> bool:
+            """Get SPDIF status channel valid flag from buffer
+
+            Returns:
+                bool: Status channel valid flag
+            """
+            return bool(self.get_reg(self.HidReg.HID_OR0) & 0x10)
+
+        def get_spdif_status_data(self) -> int:
+            """Get SPDIF status channel nibble from buffer
+
+            Returns:
+                int: SPDIF status channel nibble
+            """
+            return self.get_reg(self.HidReg.HID_OR0) & 0xF
+
+        def get_spdif_status_cat(self) -> int:
+            """Get SPDIF status channel category byte from buffer
+
+            Returns:
+                int: SPDIF status channel category byte
+            """
+            return self.get_reg(self.HidReg.HID_OR3)
+
+        def set_gpio_data_reg(self, value: int):
+            """Set GPIO data register
+
+            Args:
+                value (int): GPIO data register value (bit-masked output HIGH/LOW states)
+
+            Raises:
+                ValueError: GPIO data register value out of range
+            """
+            if value > 0x0F:
+                raise ValueError('GPIO data value out of range')
+            self.set_reg(self.HidReg.HID_OR1, value)
+
+        def get_gpio_data_reg(self) -> int:
+            """Get GPIO data register from buffer
+
+            Returns:
+                int: GPIO data register value
+            """
+            return self.get_reg(self.HidReg.HID_OR1)
+
+        def set_gpio_dir_reg(self, value: int):
+            """Set GPIO direction register value
+
+            Args:
+                value (int): GPIO direction register value (bit-masked out/in states)
+
+            Raises:
+                ValueError: GPIO direction register value out of range
+            """
+            if value > 0x0F:
+                raise ValueError('GPIO direction value out of range')
+            self.set_reg(self.HidReg.HID_OR2, value)
+
+        def get_gpio_dir_reg(self) -> int:
+            """Get GPIO direction register value from buffer
+
+            Returns:
+                int: GPIO direction register value
+            """
+            return self.get_reg(self.HidReg.HID_OR2)
+
     class InReport(Report):
         """Generic CM108AH HID In Report
         """
@@ -302,6 +396,33 @@ class Device:
             """
             return [self.get_reg(self.HidReg.HID_IR1), self.get_reg(self.HidReg.HID_IR2)]
 
+    class GpioInReport(InReport):
+        """HID In report containing GPIO data
+        """
+        def __init__(self, data: List[int]):
+            """Instantiate GPIO In report from raw data
+
+            Args:
+                data (List[int]): Raw HID In report data
+            """
+            super().__init__(data)
+
+        def get_gpio_data_reg(self) -> int:
+            """Get GPIO data register from buffer
+
+            Returns:
+                int: GPIO data register value
+            """
+            return self.get_reg(self.HidReg.HID_IR1)
+
+        def get_gpio_buttons(self) -> int:
+            """Get button states from buffer
+
+            Returns:
+                int: Button states
+            """
+            return self.get_reg(self.HidReg.HID_IR0) & 0xF
+
     @classmethod
     def GetAvailableDefaultDevices(cls) -> List[hid.HidDevice]:
         """List all available devices matching default Cmedia CM108AH VID/PID
@@ -318,6 +439,8 @@ class Device:
             device (hid.HidDevice): Underlying HIDDevice
         """
         self._hid_device: hid.HidDevice = device
+        self._gpio_data: int = 0
+        self._gpio_dir: int = 0
 
     def open(self):
         """Open underlying HID and assign HID in/out reports
@@ -483,6 +606,104 @@ class Device:
                 # Bail if fail count exceeds limit
                 if fail_count > max_retry:
                     raise IOError(f"Repeated writes to address 0x{addr + offset:02X} failed. Sent {write_out_report.get_data()}, got {write_in_report.get_data()}")
+
+    def config_gpio(self, modes: int):
+        """Configure GPIO in/out modes
+
+        Args:
+            modes (int): Output configuration
+
+        Raises:
+            ValueError: Configuration value out of range
+        """
+        if modes > 0x0F:
+            raise ValueError('Modes value out of range')
+        self._gpio_dir = modes
+        self._update_gpio(self._gpio_data)
+
+    def _update_gpio(self, data: int) -> int:
+        """Send new GPIO states to the device and update inputs
+
+        Args:
+            data (int): New output states
+
+        Raises:
+            IOError: Failed to send HID report
+
+        Returns:
+            int: Updated input state buffer
+        """
+        # Generate HID Out report
+        write_out_report = self.GpioOutReport()
+        write_out_report.set_gpio_dir_reg(self._gpio_dir)
+        write_out_report.set_gpio_dir_reg(data)
+        self._out_report.set_raw_data(write_out_report.get_data())
+
+        # Send report
+        if not self._out_report.send():
+            raise IOError('Failed to send out report')
+
+        # Readback response
+        in_data = self._in_report.get()
+        write_in_report = self.GpioInReport(in_data)
+
+        # Update internal buffer
+        self._gpio_data = write_in_report.get_gpio_data_reg()
+        return self._gpio_data
+
+    def write_gpio_pin(self, pin: int, value: bool):
+        """Write GPIO pin value
+
+        Args:
+            pin (int): GPIO pin number 1..4
+            value (bool): Output state
+
+        Raises:
+            ValueError: GPIO pin selector out of range
+        """
+        if pin < 1 or pin > 4:
+            raise ValueError('GPIO pin selection out of range')
+        mask = 1 << (pin - 1)
+        out_states = (self._gpio_data & ~mask) | (mask if value else 0)
+        self._update_gpio(out_states)
+    
+    def write_gpio_reg(self, value: int):
+        """Set GPIO data register value
+
+        Args:
+            value (int): Data register value
+
+        Raises:
+            ValueError: Register value out of range
+        """
+        if value > 0x0F:
+            raise ValueError('GPIO data register value out of range')
+        self._update_gpio(value)
+
+    def read_gpio_pin(self, pin: int) -> bool:
+        """Update cache and read pin signal state
+
+        Args:
+            pin (int): GPIO number (1-4)
+
+        Raises:
+            ValueError: GPIO number out of range
+
+        Returns:
+            bool: Pin signal state
+        """
+        if pin < 1 or pin > 4:
+            raise ValueError('GPIO pin selection out of range')
+        mask = 1 << (pin - 1)
+        return bool(self._update_gpio(self._gpio_data) & mask)
+        
+    def read_gpio_reg(self) -> int:
+        """Update chache and read GPIO pin states register
+
+        Returns:
+            int: Pin states register (GPIO1..4)
+        """
+        return self._update_gpio(self._gpio_data)
 
     def close(self):
         """Close underlying HID
