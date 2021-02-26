@@ -423,6 +423,14 @@ class Device:
             """
             return self.get_reg(self.HidReg.HID_IR0) & 0xF
 
+    class Button(IntEnum):
+        """CM108 Button definitions
+        """
+        VOLUME_UP = 0x01
+        VOLUME_DOWN = 0x02
+        PLAY_MUTE = 0x04
+        RECORD_MUTE = 0x08
+
     @classmethod
     def GetAvailableDefaultDevices(cls) -> List[hid.HidDevice]:
         """List all available devices matching default Cmedia CM108AH VID/PID
@@ -439,6 +447,7 @@ class Device:
             device (hid.HidDevice): Underlying HIDDevice
         """
         self._hid_device: hid.HidDevice = device
+        self._gpio_buttons: int = 0
         self._gpio_data: int = 0
         self._gpio_dir: int = 0
 
@@ -647,8 +656,9 @@ class Device:
         in_data = self._in_report.get()
         write_in_report = self.GpioInReport(in_data)
 
-        # Update internal buffer
+        # Update internal buffers
         self._gpio_data = write_in_report.get_gpio_data_reg()
+        self._gpio_buttons = write_in_report.get_gpio_buttons()
         return self._gpio_data
 
     def write_gpio_pin(self, pin: int, value: bool):
@@ -704,6 +714,23 @@ class Device:
             int: Pin states register (GPIO1..4)
         """
         return self._update_gpio(self._gpio_data)
+
+    def read_button(self, button: Button) -> bool:
+        """Read dedicated button state
+
+        Args:
+            button (Button): Button selector or bitmask
+
+        Raises:
+            ValueError: Invalid button selector
+
+        Returns:
+            bool: Button state. ORed button states if bitmask selector is used
+        """
+        if button > 0x08:
+            raise ValueError('Button selector out of range')
+        self._update_gpio(self._gpio_data)
+        return bool(self._gpio_buttons & button)
 
     def close(self):
         """Close underlying HID
