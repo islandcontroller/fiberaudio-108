@@ -43,7 +43,11 @@ Prototyping was carried out using **rev. 3** board design files, in a minimum-or
 
 ### Software Support
 
-* Generic Audio Device drivers included in Windows 7.1 (x64) as well as Windows 10 (Version 2004, x64) only support S/PDIF output in a passthrough mode. **Volume control and the mute input are inoperative when using the default driver package** (see below for workaround).
+* Drivers included with **SteamOS 3.0** provide full functionality out-of-box, including volume controls for S/PDIF output.
+
+<p align="center"><img src="doc/deck.png" /></p>
+
+* Generic Audio Device drivers included in **Windows 7.1** (x64) as well as **Windows 10** (Version 2004, x64) only support S/PDIF output in a passthrough mode. **Volume control and the mute input are inoperative when using the default driver package** (see below for workaround).
 
 **Workaround:** A vendor-specific Windows driver package for the CM108AH is available for download from the ASIC manufacturer's website: [https://www.cmedia.com.tw/support/download_center](https://www.cmedia.com.tw/support/download_center).
 
@@ -63,7 +67,7 @@ This workaround was tested using Windows 7.1 (x64), and Windows 10 (Version 2004
 
 ### Summary
 
-* The driver issue conflicts with one of the core design requirements, severely limiting the usability when connected to a non-Windows host.
+* The device works correctly in connection with Linux systems. For Windows hosts, a custom driver installation is required for the device to operate properly.
 
 ## Licensing
 
