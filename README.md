@@ -47,17 +47,21 @@ Prototyping was carried out using **rev. 3** board design files, in a minimum-or
 
 <p align="center"><img src="doc/deck.png" /></p>
 
-* Generic Audio Device drivers included in **Windows 7.1** (x64) as well as **Windows 10** (Version 2004, x64) only support S/PDIF output in a passthrough mode. **Volume control and the mute input are inoperative when using the default driver package** (see below for workaround).
+* Generic Audio Device drivers included in **Windows 7.1** (x64) as well as **Windows 10** (Version 22H2, x64) only support S/PDIF output in a passthrough mode. **Volume control and the mute input are inoperative when using the default driver package** (see below for workaround).
 
-**Workaround:** A vendor-specific Windows driver package for the CM108AH is available for download from the ASIC manufacturer's website: [https://www.cmedia.com.tw/support/download_center](https://www.cmedia.com.tw/support/download_center).
+**Workaround:** ~~A vendor-specific Windows driver package for the CM108AH is available for download from the ASIC manufacturer's website: [https://www.cmedia.com.tw/support/download_center](https://www.cmedia.com.tw/support/download_center).~~
 
-Using the Windows device manager, perform a manual driver update of the `Generic USB PnP Sound Device`, and select `Win8\SoftwareDriver` from the extracted archive as the driver installation sources directory.
+> Updated 08/2023: *Unfortunately, the ASIC manufacturer have stopped providing any drivers for download. I uploaded the latest signed driver package I could source (Version 8.1.8.2172) as [release `v0.1.5-driver-only`](https://github.com/islandcontroller/fiberaudio-108/releases/tag/v0.1.5-driver-only). Please check the file for integrity and verify it includes the correct signed driver binary before installing.*
+
+~~Using the Windows device manager, perform a manual driver update of the `Generic USB PnP Sound Device`, and select `Win8\SoftwareDriver` from the extracted archive as the driver installation sources directory.~~
+
+> Updated 08/2023: *To install the driver, extract the archive and right-click install the `Cm108.INF` file.*
 
 After installation and a reboot, a new `Digital Audio (USB PnP Sound Device)` device will show up in the Sound Settings dialog, alongside the old `Speakers (USB PnP Sound Device)` device. 
 
 **Disable** the `Speaker` device.
 
-This workaround was tested using Windows 7.1 (x64), and Windows 10 (Version 2004, x64).
+This workaround was tested using Windows 7.1 (x64), and Windows 10 (Version 22H2, x64).
 
 ### Device Configuration
 
