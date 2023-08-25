@@ -4,7 +4,11 @@
 
 A low-cost USB audio interface with S/PDIF optical output, based on the Cmedia CM108AH ASIC.
 
-<p align="center"><img src="doc/block-schem.svg" /></p>
+<p align="center"><picture>
+  <source media="(prefers-color-scheme: dark)" srcset="doc/block-schem-wh.svg" />
+  <source media="(prefers-color-scheme: light)" srcset="doc/block-schem.svg" />
+  <img alt="Block schematic" src="doc/block-schem.svg" />
+</picture></p>
 
 View [**Schematic**](doc/sch_fiberaudio-108_rev5.pdf) <img src="doc/pdf_icon.gif" /> or [**PCB Preview**](https://htmlpreview.github.io/?https://github.com/islandcontroller/fiberaudio-108/blob/master/doc/ibom.html) &#127760;
 
