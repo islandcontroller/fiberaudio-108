@@ -33,7 +33,7 @@ To display a help message, use:
 
     python .\cm108ah.py -h
 
-To list all available Cmedia devices, use:
+To list all available Cmedia devices, use: (**Note: Not all listed devices may support EEPROM features**)
 
     python .\cm108ah.py list
 
