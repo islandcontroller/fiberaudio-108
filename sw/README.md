@@ -33,9 +33,17 @@ To display a help message, use:
 
     python .\cm108ah.py -h
 
+To list all available Cmedia devices, use:
+
+    python .\cm108ah.py list
+
 To program a configuration from an existing file into the device, use:
 
     python .\cm108ah.py program <filename>
+
+Each mode command now supports fields for custom Vendor-ID, Product-ID and device index:
+
+    python .\cm108ah.py read --vid 0d8c --pid 013c --device 1
 
 **Retry programming, if the verification step fails.** After programming, the device needs to be power cycled, in order to apply the new configuration.
 

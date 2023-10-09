@@ -432,13 +432,18 @@ class Device:
         RECORD_MUTE = 0x08
 
     @classmethod
-    def GetAvailableDefaultDevices(cls) -> List[hid.HidDevice]:
-        """List all available devices matching default Cmedia CM108AH VID/PID
+    def GetAvailableDevices(cls, vid: int = _VENDOR_ID, pid: int = None) -> List[hid.HidDevice]:
+        """List all available devices matching VID/PID
+
+        Args:
+            vid: Vendor ID. Defaults to CMedia Vendor ID.
+            pid: Product ID. Defaults to None (no filter).
 
         Returns:
-            List[hid.HidDevice]: List of available HIDDevices matching default Cmedia VID/PID
+            List[hid.HidDevice]: List of available HIDDevices matching VID/PID
         """
-        return hid.HidDeviceFilter(vendor_id=cls._VENDOR_ID, product_id=cls._PRODUCT_ID).get_devices()
+        if not pid: return hid.HidDeviceFilter(vendor_id=vid).get_devices()
+        else:       return hid.HidDeviceFilter(vendor_id=vid, product_id=pid).get_devices()
 
     def __init__(self, device: hid.HidDevice):
         """Instantiate new CM108 Device handler from HIDDevice
@@ -1250,7 +1255,7 @@ class ConfigurationReader:
             usb_data = data['usb']
             if self._enable_usb_ids:
                 if 'vid' in usb_data: c.set_vendor_id(usb_data['vid'])
-                if 'pid' in usb_data: c.set_product_id(usb.data['pid'])
+                if 'pid' in usb_data: c.set_product_id(usb_data['pid'])
             else:
                 warnings.warn('Setting of USB IDs disabled - overriding with default (Cmedia CM108AH VID/PID)')
 
@@ -1377,8 +1382,8 @@ if __name__ == '__main__':
     _VERSION_STR="(not set)"
 
     # Helper function for device selection
-    def get_device(index: int) -> Device:
-        available = Device.GetAvailableDefaultDevices()
+    def get_device(vid: int, pid: int, index: int) -> Device:
+        available = Device.GetAvailableDevices(vid, pid)
         if not available:
             print('No devices found.')
             return None
@@ -1391,17 +1396,31 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='CM108AH configuration tool')
     subparsers = parser.add_subparsers(dest='mode')
 
+    # Hex string input for VID/PID
+    _hex = lambda x: int(x, base=16)
+
+    # List
+    list_parser = subparsers.add_parser('list', help='List available devices')
+    list_parser.add_argument('--vid', help='USB Vendor ID', type=_hex, default=Device._VENDOR_ID)
+    list_parser.add_argument('--pid', help='USB Product ID', type=_hex, default=None)
+
     # Read
     readout_parser = subparsers.add_parser('read', help='Read EEPROM contents')
+    readout_parser.add_argument('--vid', help='USB Vendor ID', type=_hex, default=Device._VENDOR_ID)
+    readout_parser.add_argument('--pid', help='USB Product ID', type=_hex, default=None)
     readout_parser.add_argument('--device', help='Device index', type=int, default=0)
 
     # Erase mode
     erase_parser = subparsers.add_parser('erase', help='Erase EEPROM')
+    erase_parser.add_argument('--vid', help='USB Vendor ID', type=_hex, default=Device._VENDOR_ID)
+    erase_parser.add_argument('--pid', help='USB Product ID', type=_hex, default=None)
     erase_parser.add_argument('--device', help='Device index', type=int, default=0)
     
     # Program mode
     program_parser = subparsers.add_parser('program', help='Program EEPROM from config file')
     program_parser.add_argument('file', help='configuration file', type=str)
+    program_parser.add_argument('--vid', help='USB Vendor ID', type=_hex, default=Device._VENDOR_ID)
+    program_parser.add_argument('--pid', help='USB Product ID', type=_hex, default=None)
     program_parser.add_argument('--device', help='device index', type=int, default=0)
     program_parser.add_argument('--enable-hid-bit', help='enable HID_EN bit configuration', type=bool, default=False)
     program_parser.add_argument('--enable-usb-ids', help='enable USB VID/PID configuration', type=bool, default=False)
@@ -1412,12 +1431,29 @@ if __name__ == '__main__':
     # Process input
     args = parser.parse_args()
 
-    if args.mode == 'read':
+    if args.mode == 'list':
+        # List available devices
+        print('Searching for available devices...')
+
+        # Search for devices matching VID (and PID if specified)
+        found = Device.GetAvailableDevices(vid=args.vid, pid=args.pid)
+        if not found:
+            print('No devices found.')
+            exit(1)
+        
+        # Print info for each device
+        for i in range(len(found)):
+            print(f"[{i}] {found[i].vendor_id:04x}:{found[i].product_id:04x} {found[i].vendor_name} - {found[i].product_name} (SN '{found[i].serial_number}')")
+        
+        print(f"{len(found)} device(s) found.")
+        exit(0)
+
+    elif args.mode == 'read':
         # Handle read mode
         print('Entering READ mode.')
 
         # Select device from list of available devices
-        device = get_device(args.device)
+        device = get_device(args.vid, args.pid, args.device)
         if not device:
             exit(1)
 
@@ -1434,7 +1470,7 @@ if __name__ == '__main__':
         print('Entering ERASE mode.')
 
         # Select device from list of available devices
-        device = get_device(args.device)
+        device = get_device(args.vid, args.pid, args.device)
         if not device:
             exit(1)
     
@@ -1458,7 +1494,7 @@ if __name__ == '__main__':
         print('Entering PROGRAM mode.')
 
         # Select device from list of available devices
-        device = get_device(args.device)
+        device = get_device(args.vid, args.pid, args.device)
         if not device:
             exit(1)
 
@@ -1493,3 +1529,4 @@ if __name__ == '__main__':
 
     # Other errors
     exit(1)
+
