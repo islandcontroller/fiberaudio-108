@@ -525,7 +525,7 @@ class Device:
 
         return data
 
-    def write16(self, addr: int, data: List[int], max_retry: int = 0):
+    def write16(self, addr: int, data: List[int]):
         """Write array of words to EEPROM
 
         Args:
@@ -538,39 +538,15 @@ class Device:
             IOError: Repeated writes (retries) failed
         """
         for offset in range(0, len(data)):
-            fail_count = 0
-            success = False
-        
             # Generate HID out report
             write_out_report = self.EepromWrite16OutReport(addr + offset, data[offset])
             self._out_report.set_raw_data(write_out_report.get_data())
 
-            # Retry until success or max retries
-            while not success:
-                # Send HID Out report (optional retry)
-                if not self._out_report.send():
-                    raise IOError('Failed to send out report')
+            # Send HID Out report (optional retry)
+            if not self._out_report.send():
+                raise IOError('Failed to send out report')
 
-                # Readback response
-                in_data = self._in_report.get()
-                write_in_report = self.EepromInReport(in_data)
-
-                # Ctrl bytes must match
-                success = write_in_report.get_reg(self.InReport.HidReg.HID_IR3) == write_out_report.get_reg(self.InReport.HidReg.HID_IR3)
-                
-                if not success:
-                    fail_count = fail_count + 1
-                    
-                    # Crude retry throttling
-                    time.sleep(0.1)
-                else:
-                    fail_count = 0
-
-                # Bail if fail count exceeds limit
-                if fail_count > max_retry:
-                    raise IOError(f"Repeated writes to address 0x{addr + offset:02X} failed. Sent {write_out_report.get_data()}, got {write_in_report.get_data()}")
-
-    def write8(self, addr: int, data: List[int], max_retry: int = 0):
+    def write8(self, addr: int, data: List[int]):
         """Write array of bytes to EEPROM
 
         Args:
@@ -589,37 +565,14 @@ class Device:
         num_words = len(data) >> 1
         for offset in range(0, num_words):
             byte_offset = offset << 1
-            fail_count = 0
-            success = False
             
             # Generate HID Out report
             write_out_report = self.EepromWrite8OutReport(addr + offset, data[byte_offset:byte_offset+2])
             self._out_report.set_raw_data(write_out_report.get_data())
 
-            # Retry until success or max retries
-            while not success:
-                # Send HID Out report (optional retry)
-                if not self._out_report.send():
-                    raise IOError('Failed to send out report')
-
-                # Readback response
-                in_data = self._in_report.get()
-                write_in_report = self.EepromInReport(in_data)
-
-                # Ctrl bytes must match
-                success = write_in_report.get_reg(self.InReport.HidReg.HID_IR3) == write_out_report.get_reg(self.InReport.HidReg.HID_IR3)
-                
-                if not success:
-                    fail_count = fail_count + 1
-
-                    # Crude retry throttling
-                    time.sleep(0.1)
-                else:
-                    fail_count = 0
-
-                # Bail if fail count exceeds limit
-                if fail_count > max_retry:
-                    raise IOError(f"Repeated writes to address 0x{addr + offset:02X} failed. Sent {write_out_report.get_data()}, got {write_in_report.get_data()}")
+            # Send HID Out report (optional retry)
+            if not self._out_report.send():
+                raise IOError('Failed to send out report')
 
     def config_gpio(self, modes: int):
         """Configure GPIO in/out modes
@@ -1306,7 +1259,7 @@ class Programmer:
             raise ValueError('Configuration data length does not match device requirement')
         
         for i in range(len(data)):
-            self._device.write16(i, data[i:i+1], 10)
+            self._device.write16(i, data[i:i+1])
 
             if print_progress:
                 print('#', end='', flush=True)
@@ -1370,7 +1323,7 @@ class Programmer:
             print_progress (bool, optional): Print ASCII progress bar. Defaults to False.
         """
         for i in range(0, Device._MEMORY_SIZE_WORDS):
-            self._device.write16(i, [0xFFFF], 10)
+            self._device.write16(i, [0xFFFF])
 
             if print_progress:
                 print('#', end='', flush=True)
