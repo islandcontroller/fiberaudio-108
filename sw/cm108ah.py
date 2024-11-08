@@ -777,6 +777,9 @@ class Configuration:
     _CFG_DAC_OUT_HP = 0x0004
     _CFG_HID_EN = 0x0002
     _CFG_REM_WKUP_EN = 0x0001
+    _MAX_LEN_SERNUM = 13
+    _MAX_LEN_MANUF = 31
+    _MAX_LEN_PROD = 31
 
     def __init__(self):
         """Instantiate new configuration object
@@ -901,7 +904,7 @@ class Configuration:
         Raises:
             ValueError: Serial number length exceeds allowed range
         """
-        if len(serial_num) > 13:
+        if len(serial_num) > self._MAX_LEN_SERNUM:
             raise ValueError('Serial number length out of range')
         self._sernum = serial_num
 
@@ -919,7 +922,7 @@ class Configuration:
         Returns:
             bool: Serial number is assigned
         """
-        return (self._sernum is not None) and not (len(self._sernum) > 13)
+        return (self._sernum is not None) and not (len(self._sernum) > self._MAX_LEN_SERNUM)
 
     def set_product_name(self, name: str):
         """Set product name
@@ -930,7 +933,7 @@ class Configuration:
         Raises:
             ValueError: Product name length exceeds allowed range
         """
-        if len(name) > 16:
+        if len(name) > self._MAX_LEN_PROD:
             raise ValueError('Product name length out of range')
         self._prod = name
 
@@ -948,7 +951,7 @@ class Configuration:
         Returns:
             bool: Product name is assigned
         """
-        return (self._prod is not None) and not (len(self._prod) > 16)
+        return (self._prod is not None) and not (len(self._prod) > self._MAX_LEN_PROD)
 
     def set_manufacturer_name(self, name: str):
         """Set manufacturer name
@@ -959,7 +962,7 @@ class Configuration:
         Raises:
             ValueError: Name length exceeds allowed range
         """
-        if len(name) > 16:
+        if len(name) > self._MAX_LEN_MANUF:
             raise ValueError('Manufacturer name length out of range')
         self._manuf = name
 
@@ -978,7 +981,7 @@ class Configuration:
         Returns:
             bool: Manufacturer name is assigned
         """
-        return (self._manuf is not None) and not (len(self._manuf) > 16)
+        return (self._manuf is not None) and not (len(self._manuf) > self._MAX_LEN_MANUF)
 
     def set_dac_volume(self, volume: int):
         """Set DAC volume preset
