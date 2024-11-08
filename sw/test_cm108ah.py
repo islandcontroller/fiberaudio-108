@@ -662,8 +662,8 @@ class TestConfiguration(unittest.TestCase):
         self.assertEqual(actual, expect)
 
     def test_SetProductNameLengthRange(self):
-        expect_name_pass = 'p' * 16
-        expect_name_fail = 'f' * 17
+        expect_name_pass = 'p' * 31
+        expect_name_fail = 'f' * 32
 
         c1 = Configuration()
         try:
@@ -685,8 +685,8 @@ class TestConfiguration(unittest.TestCase):
         self.assertEqual(actual, expect)
 
     def test_SetManufNameLengthRange(self):
-        expect_name_pass = 'p' * 16
-        expect_name_fail = 'f' * 17
+        expect_name_pass = 'p' * 31
+        expect_name_fail = 'f' * 32
 
         c1 = Configuration()
         try:
