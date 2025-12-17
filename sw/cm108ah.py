@@ -463,7 +463,8 @@ class Device:
         self._hid_device.open()
         self._in_report = self._hid_device.find_input_reports()[0]
         self._out_report = self._hid_device.find_output_reports()[0]
-        
+
+
     def read16(self, addr: int, num_words: int = 1) -> List[int]:
         """Read from EEPROM into list of words
 
@@ -476,7 +477,7 @@ class Device:
 
         Returns:
             List[int]: EEPROM data as list of words
-        """
+        """        
         data = []
         for offset in range(0, num_words):
             # Generate and send USB HID out report
@@ -485,7 +486,7 @@ class Device:
             
             if not self._out_report.send():
                 raise IOError('Failed to send out report')
-
+            time.sleep(0.01)            
             # Readback data
             in_data = self._in_report.get()
             read_in_report = self.EepromInReport(in_data)
@@ -508,6 +509,7 @@ class Device:
         Returns:
             List[int]: EEPROM data as list of bytes
         """
+        
         data = []
         for offset in range(0, num_words):
             # Generate and send USB HID out report
@@ -516,7 +518,7 @@ class Device:
             
             if not self._out_report.send():
                 raise IOError('Failed to send out report')
-
+            time.sleep(0.01)
             # Readback data
             in_data = self._in_report.get()
             read_in_report = self.EepromInReport(in_data)
@@ -546,7 +548,7 @@ class Device:
             # Send HID Out report (optional retry)
             if not self._out_report.send():
                 raise IOError('Failed to send out report')
-
+            
     def write8(self, addr: int, data: List[int]):
         """Write array of bytes to EEPROM
 
@@ -1300,15 +1302,7 @@ class Programmer:
             ValueError: Configuration data does not match EEPROM 
         """
         serializer = ConfigurationSerializer(config)
-        data = serializer.serialize()
-        #while len(data) <= 47:
-        #    data.append(0xFFFF)
-        data[42] = 0 #0x8CA0
-        #data[43] = 0x0227 #0x4827
-        #data[44] = 0x0000   # 0x2E – ADC Minimum Volume
-        #data[45] = 0x7FFF   # 0x2F – ADC Maximum Volume
-        #data[46] = 0x0000   # 0x2E – ADC Minimum Volume        
-        #data[47] = 0x7FFF   # 0x2F – ADC Maximum Volume
+        data = serializer.serialize()        
         print(data)
         decode_eeprom(data)
         if len(data) != Device._MEMORY_SIZE_WORDS:
