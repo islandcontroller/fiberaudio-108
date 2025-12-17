@@ -35,6 +35,9 @@
 #presets:
 #  adc: 0x00
 #  dac: 0x00
+#  adc_valid: 0x00
+#  dac_valid: 0x00
+#  aa_valid: 0x00
 
 # Configuration bits. 
 # Setting this field will automatically set the "cfg_bits_-valid" magic flag. 

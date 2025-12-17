@@ -19,6 +19,7 @@ import time
 from typing import *
 import warnings
 import yaml
+from explain_eeprom import decode_eeprom
 
 class Device:
     """CM108AH USB HID access controls
@@ -746,6 +747,9 @@ class Configuration:
         self._dac_vol = None
         self._adc_vol = None
         self._cfg_bits = None
+        self._adc_valid = None
+        self._dac_valid = None
+        self._aa_valid  = None
 
     def set_magic_flags(self, cfg_bits_valid: bool = False, use_manuf_str: bool = False, use_serial_num: bool = False, use_product_str: bool = False):
         """Set magic flags (first EEPROM word)
@@ -993,6 +997,24 @@ class Configuration:
             bool: ADC volume preset is assigned
         """
         return (self._adc_vol is not None) and not (self._adc_vol > 0x78)
+        
+    def set_adc_valid(self, v: int):
+        self._adc_valid = 1 if v else 0
+
+    def set_dac_valid(self, v: int):
+        self._dac_valid = 1 if v else 0
+
+    def set_aa_valid(self, v: int):
+        self._aa_valid = 1 if v else 0
+
+    def get_adc_valid(self): return self._adc_valid
+    def get_dac_valid(self): return self._dac_valid
+    def get_aa_valid(self):  return self._aa_valid
+
+    def has_any_valid_flags(self) -> bool:
+        return (self._adc_valid is not None or
+                self._dac_valid is not None or
+                self._aa_valid  is not None)
 
     def set_config_bits(self, shdn_dac: bool = False, total_pwr_ctl: bool = False, mic_hp: bool = True, 
                               adc_sync: bool = False, mic_boost: bool = True, dac_out_hp: bool = False, 
@@ -1027,7 +1049,6 @@ class Configuration:
             config_word = config_word | self._CFG_HID_EN
         if remote_wkup_en:
             config_word = config_word | self._CFG_REM_WKUP_EN
-
         self._cfg_bits = config_word
 
     def get_config_bits(self) -> int:
@@ -1127,9 +1148,33 @@ class ConfigurationSerializer:
         if c.is_serial_num_valid(): copy_with_offset(memory_buffer, pack_str(c.get_serial_num()), 3)            
         if c.is_product_name_valid(): copy_with_offset(memory_buffer, pack_str(c.get_product_name()), 10)
         if c.is_manufacturer_name_valid(): copy_with_offset(memory_buffer, pack_str(c.get_manufacturer_name()), 26)
-        if c.is_dac_volume_valid(): memory_buffer[42] = (memory_buffer[42] & 0x00FF) | (c.get_dac_volume() << 8)
-        if c.is_adc_volume_valid(): memory_buffer[42] = (memory_buffer[42] & 0xFF00) | c.get_adc_volume()
+        #if c.is_dac_volume_valid(): memory_buffer[42] = (memory_buffer[42] & 0x00FF) | (c.get_dac_volume() << 8)
+        #if c.is_adc_volume_valid(): memory_buffer[42] = (memory_buffer[42] & 0xFF00) | c.get_adc_volume()
         if c.is_config_bits_valid(): memory_buffer[43] = c.get_config_bits()
+        if (c.is_dac_volume_valid() or
+            c.is_adc_volume_valid() or
+            c.has_any_valid_flags()):
+
+            word = 0x0000
+
+            # initial volumes
+            if c.is_dac_volume_valid():
+                word |= (c.get_dac_volume() & 0x7F) << 9
+
+            if c.is_adc_volume_valid():
+                word |= (c.get_adc_volume() & 0x3F) << 3
+
+            # valid flags (default = 0)
+            if c.get_dac_valid() == 1:
+                word |= (1 << 2)
+
+            if c.get_adc_valid() == 1:
+                word |= (1 << 1)
+
+            if c.get_aa_valid() == 1:
+                word |= (1 << 0)
+
+            memory_buffer[42] = word
 
         return memory_buffer
 
@@ -1220,7 +1265,9 @@ class ConfigurationReader:
             presets_data = data['presets']
             if 'adc' in presets_data: c.set_adc_volume(presets_data['adc'])
             if 'dac' in presets_data: c.set_dac_volume(presets_data['dac'])
-
+            if 'adc_valid' in presets_data: c.set_adc_valid(presets_data['adc_valid'])
+            if 'dac_valid' in presets_data: c.set_dac_valid(presets_data['dac_valid'])
+            if 'aa_valid' in presets_data: c.set_aa_valid(presets_data['aa_valid'])
         return c
 
     def __enter__(self) -> Configuration:
@@ -1254,7 +1301,16 @@ class Programmer:
         """
         serializer = ConfigurationSerializer(config)
         data = serializer.serialize()
-
+        #while len(data) <= 47:
+        #    data.append(0xFFFF)
+        data[42] = 0 #0x8CA0
+        #data[43] = 0x0227 #0x4827
+        #data[44] = 0x0000   # 0x2E – ADC Minimum Volume
+        #data[45] = 0x7FFF   # 0x2F – ADC Maximum Volume
+        #data[46] = 0x0000   # 0x2E – ADC Minimum Volume        
+        #data[47] = 0x7FFF   # 0x2F – ADC Maximum Volume
+        print(data)
+        decode_eeprom(data)
         if len(data) != Device._MEMORY_SIZE_WORDS:
             raise ValueError('Configuration data length does not match device requirement')
         
@@ -1485,4 +1541,3 @@ if __name__ == '__main__':
 
     # Other errors
     exit(1)
-
