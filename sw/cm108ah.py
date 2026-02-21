@@ -463,12 +463,13 @@ class Device:
         self._in_report = self._hid_device.find_input_reports()[0]
         self._out_report = self._hid_device.find_output_reports()[0]
 
-    def read16(self, addr: int, num_words: int = 1) -> List[int]:
+    def read16(self, addr: int, num_words: int = 1, max_retry: int = 3) -> List[int]:
         """Read from EEPROM into list of words
 
         Args:
             addr (int): Start word address
             num_words (int, optional): Number of words to read. Defaults to 1.
+            max_retry (int, optional): Maximum number of retries for each address. Must be greater than 0. Defaults to 3.
 
         Raises:
             IOError: Failed to send USB HID out report
@@ -478,28 +479,39 @@ class Device:
         """
         data = []
         for offset in range(0, num_words):
-            # Generate and send USB HID out report
-            read_out_report = self.EepromReadOutReport(addr + offset)
-            self._out_report.set_raw_data(read_out_report.get_data())
+            last_read = []
+            for n in range(0, max_retry + 1):
+                # Generate and send USB HID out report
+                read_out_report = self.EepromReadOutReport(addr + offset)
+                self._out_report.set_raw_data(read_out_report.get_data())
 
-            if not self._out_report.send():
-                raise IOError('Failed to send out report')
+                if not self._out_report.send():
+                    raise IOError('Failed to send out report')
 
-            # Readback data
-            in_data = self._in_report.get()
-            read_in_report = self.EepromInReport(in_data)
+                # Readback data
+                in_data = self._in_report.get()
+                read_in_report = self.EepromInReport(in_data)
 
-            # Append to buffer
-            data = data + [read_in_report.get_eeprom_data16()]
-
+                # Garbage check
+                read_data = [read_in_report.get_eeprom_data16()]
+                if last_read == read_data:
+                    # Data matches last read
+                    data += read_data
+                elif n < max_retry:
+                    # Retry
+                    last_read = read_data
+                else:
+                    # Number of re-tries exhausted
+                    raise IOError(f"Failed to read consistent data at address 0x{addr + offset:04x}")
         return data
 
-    def read8(self, addr: int, num_words: int = 1) -> List[int]:
+    def read8(self, addr: int, num_words: int = 1, max_retry: int = 3) -> List[int]:
         """Read from EERPOM into list of bytes
 
         Args:
             addr (int): Start word address
             num_words (int, optional): Number of **words** to read. Defaults to 1.
+            max_retry (int, optional): Maximum number of retries for each address. Must be greater than 0. Defaults to 3.
 
         Raises:
             IOError: Failed to send USB HID Out report
@@ -509,20 +521,31 @@ class Device:
         """
         data = []
         for offset in range(0, num_words):
-            # Generate and send USB HID out report
-            read_out_report = self.EepromReadOutReport(addr + offset)
-            self._out_report.set_raw_data(read_out_report.get_data())
+            last_read = []
+            for n in range(0, max_retry + 1):
+                # Generate and send USB HID out report
+                read_out_report = self.EepromReadOutReport(addr + offset)
+                self._out_report.set_raw_data(read_out_report.get_data())
 
-            if not self._out_report.send():
-                raise IOError('Failed to send out report')
+                if not self._out_report.send():
+                    raise IOError('Failed to send out report')
 
-            # Readback data
-            in_data = self._in_report.get()
-            read_in_report = self.EepromInReport(in_data)
+                # Readback data
+                in_data = self._in_report.get()
+                read_in_report = self.EepromInReport(in_data)
 
-            # Append to buffer
-            data = data + read_in_report.get_eeprom_data8()
-
+                # Garbage check
+                read_data = read_in_report.get_eeprom_data8()
+                if last_read == read_data:
+                    # Data matches last read
+                    data += read_data
+                    break
+                elif n < max_retry:
+                    # Retry
+                    last_read = read_data
+                else:
+                    # Number of re-tries exhausted
+                    raise IOError(f"Failed to read consistent data at address 0x{addr + offset:04x}")
         return data
 
     def write16(self, addr: int, data: List[int]):
@@ -531,7 +554,6 @@ class Device:
         Args:
             addr (int): Start word address
             data (List[int]): List of words
-            max_retry (int, optional): Number of write retries per address. Defaults to 0.
 
         Raises:
             IOError: Failed to send USB OUT report
@@ -552,7 +574,6 @@ class Device:
         Args:
             addr (int): Start word address
             data (List[int]): List of bytes (multiple of 2!)
-            max_retry (int, optional): Number of write retries for each address. Defaults to 0.
 
         Raises:
             ValueError: Length must be multiple of 2
