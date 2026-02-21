@@ -85,7 +85,7 @@ class Device:
             if value > 0xFF:
                 raise ValueError('Value out of range')
             self._regs[reg] = value
-        
+
         def get_reg(self, reg: HidReg) -> int:
             """Get register value
 
@@ -133,7 +133,7 @@ class Device:
             Raises:
                 ValueError: EEPROM address out of range
             """
-            if addr > self._EEPROM_ADDR_MASK: 
+            if addr > self._EEPROM_ADDR_MASK:
                 raise ValueError('Address out of range')
             access = self._EEPROM_WRITE if write_access else self._EEPROM_READ
             self.set_reg(self.HidReg.HID_OR3, access | addr)
@@ -181,7 +181,7 @@ class Device:
                 List[int]: Data as list of bytes
             """
             return [self.get_reg(self.HidReg.HID_OR1), self.get_reg(self.HidReg.HID_OR2)]
-            
+
     class EepromReadOutReport(EepromOutReport):
         """HID Out report for data read access
         """
@@ -338,7 +338,7 @@ class Device:
             """
             if len(data) != 5:
                 raise ValueError('Register list must contain exactly 5 items')
-            
+
             report_num = data[0]
             regs = data[1:5]
 
@@ -462,7 +462,7 @@ class Device:
         self._hid_device.open()
         self._in_report = self._hid_device.find_input_reports()[0]
         self._out_report = self._hid_device.find_output_reports()[0]
-        
+
     def read16(self, addr: int, num_words: int = 1) -> List[int]:
         """Read from EEPROM into list of words
 
@@ -481,7 +481,7 @@ class Device:
             # Generate and send USB HID out report
             read_out_report = self.EepromReadOutReport(addr + offset)
             self._out_report.set_raw_data(read_out_report.get_data())
-            
+
             if not self._out_report.send():
                 raise IOError('Failed to send out report')
 
@@ -491,7 +491,7 @@ class Device:
 
             # Append to buffer
             data = data + [read_in_report.get_eeprom_data16()]
-            
+
         return data
 
     def read8(self, addr: int, num_words: int = 1) -> List[int]:
@@ -512,7 +512,7 @@ class Device:
             # Generate and send USB HID out report
             read_out_report = self.EepromReadOutReport(addr + offset)
             self._out_report.set_raw_data(read_out_report.get_data())
-            
+
             if not self._out_report.send():
                 raise IOError('Failed to send out report')
 
@@ -565,7 +565,7 @@ class Device:
         num_words = len(data) >> 1
         for offset in range(0, num_words):
             byte_offset = offset << 1
-            
+
             # Generate HID Out report
             write_out_report = self.EepromWrite8OutReport(addr + offset, data[byte_offset:byte_offset+2])
             self._out_report.set_raw_data(write_out_report.get_data())
@@ -634,7 +634,7 @@ class Device:
         mask = 1 << (pin - 1)
         out_states = (self._gpio_data & ~mask) | (mask if value else 0)
         self._update_gpio(out_states)
-    
+
     def write_gpio_reg(self, value: int):
         """Set GPIO data register value
 
@@ -664,7 +664,7 @@ class Device:
             raise ValueError('GPIO pin selection out of range')
         mask = 1 << (pin - 1)
         return bool(self._update_gpio(self._gpio_data) & mask)
-        
+
     def read_gpio_reg(self) -> int:
         """Update chache and read GPIO pin states register
 
@@ -768,7 +768,7 @@ class Configuration:
             config_word = config_word | self._MAGIC_FLAG_PROD_EN
 
         self._magic_flags = config_word
-    
+
     def get_magic_flags(self) -> int:
         """Get magic flags
 
@@ -813,7 +813,7 @@ class Configuration:
 
     def is_vendor_id_valid(self) -> bool:
         """Check whether USB VID has been set
-        
+
         Returns:
             bool: USB VID is set
         """
@@ -994,8 +994,8 @@ class Configuration:
         """
         return (self._adc_vol is not None) and not (self._adc_vol > 0x78)
 
-    def set_config_bits(self, shdn_dac: bool = False, total_pwr_ctl: bool = False, mic_hp: bool = True, 
-                              adc_sync: bool = False, mic_boost: bool = True, dac_out_hp: bool = False, 
+    def set_config_bits(self, shdn_dac: bool = False, total_pwr_ctl: bool = False, mic_hp: bool = True,
+                              adc_sync: bool = False, mic_boost: bool = True, dac_out_hp: bool = False,
                               hid_en: bool = True, remote_wkup_en: bool = False):
         """Set configuration bitfield
 
@@ -1096,7 +1096,7 @@ class ConfigurationSerializer:
                 else:
                     # Odd indices into low bytes
                     words_buffer[offset] = (words_buffer[offset] & 0xFF00) | bytes_data[i]
-            
+
             return words_buffer
 
         def copy_with_offset(dest: list, src: list, offset: int) -> list:
@@ -1124,7 +1124,7 @@ class ConfigurationSerializer:
         if c.is_magic_flags_valid(): memory_buffer[0] = c.get_magic_flags()
         if c.is_vendor_id_valid(): memory_buffer[1] = c.get_vendor_id()
         if c.is_product_id_valid(): memory_buffer[2] = c.get_product_id()
-        if c.is_serial_num_valid(): copy_with_offset(memory_buffer, pack_str(c.get_serial_num()), 3)            
+        if c.is_serial_num_valid(): copy_with_offset(memory_buffer, pack_str(c.get_serial_num()), 3)
         if c.is_product_name_valid(): copy_with_offset(memory_buffer, pack_str(c.get_product_name()), 10)
         if c.is_manufacturer_name_valid(): copy_with_offset(memory_buffer, pack_str(c.get_manufacturer_name()), 26)
         if c.is_dac_volume_valid(): memory_buffer[42] = (memory_buffer[42] & 0x00FF) | (c.get_dac_volume() << 8)
@@ -1172,14 +1172,14 @@ class ConfigurationReader:
 
         # Process manufacturer name
         has_manuf_name = 'manufacturer' in data
-        if has_manuf_name: 
+        if has_manuf_name:
             c.set_manufacturer_name(data['manufacturer'])
 
         # Process product name
         has_product_name = 'product' in data
         if has_product_name:
-            c.set_product_name(data['product'])        
-            
+            c.set_product_name(data['product'])
+
         # Process configuation bits, retaining default values for unset fields
         has_config_bits = 'config' in data
         if has_config_bits:
@@ -1205,7 +1205,7 @@ class ConfigurationReader:
         # Pre-Set default vendor and product IDs
         c.set_vendor_id(Device._VENDOR_ID)
         c.set_product_id(Device._PRODUCT_ID)
-        
+
         # Process USB ID fields
         if 'usb' in data:
             usb_data = data['usb']
@@ -1250,20 +1250,20 @@ class Programmer:
             print_progress (bool, optional): Print ASCII progress bar. Defaults to False.
 
         Raises:
-            ValueError: Configuration data does not match EEPROM 
+            ValueError: Configuration data does not match EEPROM
         """
         serializer = ConfigurationSerializer(config)
         data = serializer.serialize()
 
         if len(data) != Device._MEMORY_SIZE_WORDS:
             raise ValueError('Configuration data length does not match device requirement')
-        
+
         for i in range(len(data)):
             self._device.write16(i, data[i:i+1])
 
             if print_progress:
                 print('#', end='', flush=True)
-            
+
             # Crude data rate throttling
             time.sleep(self._THROTTLE_DELAY)
 
@@ -1306,7 +1306,7 @@ class Programmer:
             bool: EEPROM is erased
         """
         compare = [0xFFFF] * Device._MEMORY_SIZE_WORDS
-        
+
         for i in range(0, num_retry + 1):
             readback = self._device.read16(0, len(compare))
             if compare == readback:
@@ -1330,7 +1330,7 @@ class Programmer:
 
             # Crude data rate throttling
             time.sleep(self._THROTTLE_DELAY)
-        
+
         if print_progress:
                 print()
 
@@ -1371,7 +1371,7 @@ if __name__ == '__main__':
     erase_parser.add_argument('--vid', help='USB Vendor ID', type=_hex, default=Device._VENDOR_ID)
     erase_parser.add_argument('--pid', help='USB Product ID', type=_hex, default=None)
     erase_parser.add_argument('--device', help='Device index', type=int, default=0)
-    
+
     # Program mode
     program_parser = subparsers.add_parser('program', help='Program EEPROM from config file')
     program_parser.add_argument('file', help='configuration file', type=str)
@@ -1380,7 +1380,7 @@ if __name__ == '__main__':
     program_parser.add_argument('--device', help='device index', type=int, default=0)
     program_parser.add_argument('--enable-hid-bit', help='enable HID_EN bit configuration', type=bool, default=False)
     program_parser.add_argument('--enable-usb-ids', help='enable USB VID/PID configuration', type=bool, default=False)
-    
+
     # Version information
     parser.add_argument('--version', action='version', version='%(prog)s Version '+_VERSION_STR)
 
@@ -1396,11 +1396,11 @@ if __name__ == '__main__':
         if not found:
             print('No devices found.')
             exit(1)
-        
+
         # Print info for each device
         for i in range(len(found)):
             print(f"[{i}] {found[i].vendor_id:04x}:{found[i].product_id:04x} {found[i].vendor_name} - {found[i].product_name} (SN '{found[i].serial_number}')")
-        
+
         print(f"{len(found)} device(s) found.")
         exit(0)
 
@@ -1429,13 +1429,13 @@ if __name__ == '__main__':
         device = get_device(args.vid, args.pid, args.device)
         if not device:
             exit(1)
-    
+
         # Open device and erase contents
         with Device(device) as device:
             print('Erasing EEPROM...')
             programmer = Programmer(device)
             programmer.erase(print_progress='True')
-            
+
             print('Performing empty-check...')
             verify_result = programmer.empty_check()
             if verify_result:
